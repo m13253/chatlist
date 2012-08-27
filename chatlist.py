@@ -5,6 +5,7 @@ import sys
 
 import command
 import config
+import misc
 
 class XMPPBot(sleekxmpp.ClientXMPP):
     def __init__(self, jid, password):
@@ -57,16 +58,17 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             sys.stderr.write('Exception: %s\n' % e)
 
     def dispatch_message(self, from_jid, body):
-        nick=self.client_roster[from_jid]['name']
-        if not nick:
-            nick=sleekxmpp.JID(from_jid).user
+        self.send_except(from_jid, '%s: %s' % (misc.getnick(self, nick), body))
+
+    def send_except(self, except_jid, body):
         for i in self.client_roster:
-            if i==from_jid:
-                continue
-            if self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both':
-                sys.stderr.write('Sending to %s.' % i)
-                self.send_message(mto=i, mbody='%s: %s' % (nick, body), mtype='chat')
-                sys.stderr.write('\n')
+            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both':
+                try:
+                    sys.stderr.write('Sending to %s.' % i)
+                    self.send_message(mto=i, mbody=body, mtype='chat')
+                    sys.stderr.write('\n')
+                except:
+                    pass
 
 if __name__=='__main__':
     try:
@@ -84,6 +86,7 @@ if __name__=='__main__':
     except UnicodeEncodeError:
         pass
     except SystemExit:
+        xmpp.disconnect(wait=True)
         raise
     except Exception as e:
         sys.stderr.write('Exception: %s\n' %s)
