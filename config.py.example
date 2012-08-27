@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+
+JID = 'group@example.com/bot'
+password = '********'
+admins = ['you@example.com', 'another@example.com']
+
+# vim: et ft=python sts=4 sw=4 ts=4
