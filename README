@@ -1,0 +1,8 @@
+chatlist
+========
+A XMPP chat program that bounces messages to all its subscribers
+
+Requirements:
+    python (>=3.0)
+    python-sleekxmpp (https://github.com/fritzy/SleekXMPP)
+
