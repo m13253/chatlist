@@ -78,7 +78,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
     def send_except(self, except_jid, body):
         sys.stderr.write('%s: %s\n' % (except_jid, body))
         for i in self.client_roster:
-            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both':
+            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
                 try:
                     sys.stderr.write('Sending to %s.' % i)
                     self.send_message(mto=i, mbody=body, mtype='chat')

@@ -75,13 +75,24 @@ def trigger(xmpp, msg):
                 msg.reply('Error: Permission denied.').send()
         elif cmd[0]=='ls':
             isAdmin = from_jid in config.admins
+            option_a = False
+            for i in cmd[1:]:
+                if i.startswith('-'):
+                    if 'a' in i:
+                        option_a = True
             s='\n'
             for i in xmpp.client_roster:
                 if xmpp.client_roster[i]['to']:
-                    s+='\n%s' % misc.getnick(xmpp, i)
-                    if isAdmin:
-                        s+='\t(%s)' % i
+                    if option_a or xmpp.client_roster[i].resources:
+                        s+='\n%s' % misc.getnick(xmpp, i)
+                        if isAdmin:
+                            s+='\t(%s)' % i
             msg.reply(s[1:]).send()
+        elif cmd[0]=='eval':
+            if from_jid in config.admins:
+                msg.reply(str(eval(msg['body'].split(None, 1)[1]))).send()
+            else:
+                msg.reply('Error: Unknown command.').send()
         else:
             msg.reply('Error: Unknown command.').send()
     except SystemExit:
