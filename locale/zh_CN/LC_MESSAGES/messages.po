@@ -1,23 +1,48 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Language: zh_CN\n"
-"Content-Type: test/plain; charset=utf-8\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-28 20:58+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: chatlist.py:53
+#, python-format
+msgid ""
+"You have been given a random nickname %s, please use /-nick to change your "
+"nickname."
+msgstr "您已被给予随机昵称 %s，请使用 /-nick 来更改昵称。"
+
+#: chatlist.py:54
+msgid "For more help, type /-help"
+msgstr "键入 /-help 以寻求更多帮助。"
+
+#: chatlist.py:55
 #, python-format
 msgid "%s has joined this group."
 msgstr "%s 已加入本群。"
 
-#: chatlist.py:64 command.py:28
+#: chatlist.py:66 command.py:28
 #, python-format
 msgid "%s has quited this group."
 msgstr "%s 已退出本群。"
 
-#: chatlist.py:78
+#: chatlist.py:80
 msgid "You have not accept the buddy request."
 msgstr "您还没有接受好友请求。"
 
-#: chatlist.py:80
+#: chatlist.py:82
 msgid "You have not joined this group."
 msgstr "您还没有加入本群。"
 

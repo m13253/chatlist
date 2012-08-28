@@ -30,9 +30,16 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         sys.stderr.write('roster = [\n')
         for i in self.client_roster:
             if self.client_roster[i]['to']:
-                sys.stderr.write('\t%s' % i)
-                misc.add_nicktable(self, i)
-                sys.stderr.write('\n')
+                if self.client_roster[i]['subscription']=='both':
+                    sys.stderr.write('\t%s' % i)
+                    misc.add_nicktable(self, i)
+                    sys.stderr.write('\n')
+                elif self.client_roster[i]['subscription']=='to':
+                    try:
+                        misc.del_roster_item(i)
+                        misc.client_roster.remove(i)
+                    except:
+                        pass
         sys.stderr.write(']\n')
 
     def subscribe(self, presence):
@@ -50,7 +57,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.update_roster(jid, name=to_nick)
         misc.add_nicktable(self, jid)
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(config.welcome_message, config.command_prefix[0]), mtype='chat')
-        self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('Your have been given a random nickname %s, please use /-nick to change your nickname.'), config.command_prefix[0]) % to_nick, mtype='chat')
+        self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('You have been given a random nickname %s, please use /-nick to change your nickname.'), config.command_prefix[0]) % to_nick, mtype='chat')
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('For more help, type /-help'), config.command_prefix[0]), mtype='chat')
         self.send_except(jid, _('%s has joined this group.') % to_nick)
 
