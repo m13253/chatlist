@@ -97,7 +97,7 @@ msgstr "错误：/-setnick 需要恰好两个参数。"
 
 #: command.py:128 command.py:134 command.py:136
 msgid "Error: Unknown command. For help, type /-help"
-msgstr "错误：未知命令。键入 /- 以寻求帮助。"
+msgstr "错误：未知命令。键入 /-help 以寻求帮助。"
 
 #: command.py:132
 msgid "Command executed."

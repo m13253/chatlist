@@ -58,9 +58,9 @@ def isjidvalid(jid):
 def replace_prefix(s, prefix):
     res=''
     lastisslash=False
-    for i in prefix:
+    for i in s:
         if lastisslash:
-            if i='-':
+            if i=='-':
                 res+=prefix
             else:
                 res+=i
@@ -68,7 +68,7 @@ def replace_prefix(s, prefix):
         elif i=='/':
             lastisslash=True
         else:
-            res+=prefix
+            res+=i
     if lastisslash:
         res+='/'
     return res
