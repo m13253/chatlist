@@ -38,11 +38,17 @@ def trigger(xmpp, msg):
                 xmpp.dispatch_message(from_jid, l)
             return
 
-        if cmd[0] in ('users', 'names', 'list', 'dir'):
+        if cmd[0] in ('users', 'user', 'names', 'name', 'list', 'dir', 'la'):
             cmd[0]='ls'
             cmd.append('-a')
         elif cmd[0]=='online':
             cmd[0]='ls'
+        elif cmd[0]=='ll':
+            cmd[0]='ls'
+            cmd.append('-l')
+        elif cmd[0] in ('lla', 'lal'):
+            cmd[0]='ls'
+            cmd.append('-la')
         elif cmd[0] in ('man', 'info'):
             cmd[0]='help'
         elif cmd[0] in ('stat', 'whowas', 'dig', 'nslookup'):
@@ -55,6 +61,10 @@ def trigger(xmpp, msg):
             cmd[0]='shutdown'
         elif cmd[0] in ('restart', 'reboot', 'init6'):
             cmd=['shutdown', '-r']
+        elif cmd[0] in ('rm', 'del', 'remove'):
+            cmd='kick'
+        elif cmd[0] in ('mv', 'move', 'ren', 'rename'):
+            cmd='setnick'
 
         if cmd[0]=='help':
             if len(cmd)<2:
@@ -165,6 +175,33 @@ def trigger(xmpp, msg):
                 msg.reply(_('Error: Permission denied.')).send()
             return
 
+        if cmd[0]=='setnick':
+            if len(cmd)==3:
+                if from_jid in config.admins:
+                    to_jid=misc.getjid(xmpp, cmd[1])
+                    if to_jid:
+                        if not misc.isnickvalid(new_nick):
+                            msg.reply(_('Nickname %s not vaild.') % new_nick).send()
+                        elif misc.getnick(xmpp, cmd[2]):
+                            msg.reply(_('Nickname %s is already in use.') % cmd[2]).send()
+                        else:
+                            oldnick=misc.getnick(xmpp, cmd[1])
+                            misc.change_nicktable(xmpp, from_jid, cmd[2])
+                            xmpp.update_roster(cmd[1], name=cmd[2])
+                            xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (oldnick, cmd[2]))
+                    else:
+                        msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+                    return
+                elif getjid(cmd[1])==from_jid:
+                    cmd[0]='nick'
+                    del cmd[1]
+                else:
+                    msg.reply(_('Error: Permission denied.')).send()
+                    return
+            else:
+                msg.reply(misc.replace_prefix(_('Error: /-setnick takes exactly two arguments.'), prefix)).send()
+                return
+
         if cmd[0]=='nick':
             if len(cmd)==1:
                 msg.reply(_('Your current nickname is %s.') % misc.getnick(xmpp, from_jid)).send()
@@ -183,28 +220,6 @@ def trigger(xmpp, msg):
                     xmpp.send_except(None, _('%s changed its nick to %s.') % (oldnick, new_nick))
             else:
                 msg.reply(misc.replace_prefix(_('Error: /-nick takes exactly one argument.'), prefix)).send()
-            return
-
-        if cmd[0]=='setnick':
-            if from_jid in config.admins:
-                if len(cmd)==3:
-                    to_jid=misc.getjid(xmpp, cmd[1])
-                    if to_jid:
-                        if not misc.isnickvalid(new_nick):
-                            msg.reply(_('Nickname %s not vaild.') % new_nick).send()
-                        elif misc.getnick(xmpp, cmd[2]):
-                            msg.reply(_('Nickname %s is already in use.') % cmd[2]).send()
-                        else:
-                            oldnick=misc.getnick(xmpp, cmd[1])
-                            misc.change_nicktable(xmpp, from_jid, cmd[2])
-                            xmpp.update_roster(cmd[1], name=cmd[2])
-                            xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (oldnick, cmd[2]))
-                    else:
-                        msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
-                else:
-                    msg.reply(misc.replace_prefix(_('Error: /-setnick takes exactly two arguments.'), prefix)).send()
-            else:
-                msg.reply(_('Error: Permission denied.')).send()
             return
 
         if cmd[0]=='ls':
