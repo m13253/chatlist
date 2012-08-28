@@ -50,6 +50,8 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.update_roster(jid, name=to_nick)
         misc.add_nicktable(self, jid)
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(config.welcome_message, config.command_prefix[0]), mtype='chat')
+        self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('Your have been given a random nickname %s, please use /-nick to change your nickname.'), config.command_prefix[0]) % to_nick, mtype='chat')
+        self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('For more help, type /-help'), config.command_prefix[0]), mtype='chat')
         self.send_except(jid, _('%s has joined this group.') % to_nick)
 
     def unsubscribe(self, presence):

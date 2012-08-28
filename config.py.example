@@ -7,6 +7,6 @@ admins = ['you@example.com', 'another@example.com']
 command_prefix = '-/)' # A message starting with one of these characters will trigger a specific command
 
 # '/-' will be replaced by command_prefix[0], for '/', type '//'
-welcome_message = 'Welcome to join this group, for help, type /-help'
+welcome_message = 'Welcome to join this group!'
 
 # vim: et ft=python sts=4 sw=4 ts=4
