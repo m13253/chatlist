@@ -78,7 +78,7 @@ def trigger(xmpp, msg):
             if len(cmd)>=2:
                 to_jid=misc.getjid(xmpp, cmd[1])
                 if to_jid:
-                    xmpp.send_message(mto=to_jid, mbody='%s (%s):' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
+                    xmpp.send_message(mto=to_jid, mbody='%s (%s): %s' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
                 else:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
