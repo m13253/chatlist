@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import gettext
 import os
 import random
 import sleekxmpp
@@ -9,6 +10,8 @@ import time
 import command
 import config
 import misc
+
+gettext.install('messages', 'locale')
 
 class XMPPBot(sleekxmpp.ClientXMPP):
     def __init__(self, jid, password):
@@ -47,7 +50,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.update_roster(jid, name=to_nick)
         misc.add_nicktable(self, jid)
         self.send_message(mto=presence['from'], mbody=config.welcome_message, mtype='chat')
-        self.send_except(jid, '%s has joined the group.' % to_nick)
+        self.send_except(jid, _('%s has joined this group.') % to_nick)
 
     def unsubscribe(self, presence):
         from_jid=sleekxmpp.JID(presence['from']).bare
@@ -58,7 +61,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         except:
             pass
         sys.stderr.write('%s unsubscribed me.\n' % presence['from'])
-        self.send_except(from_jid, '%s has quited the group.' % from_nick)
+        self.send_except(from_jid, _('%s has quited this group.') % from_nick)
 
     def message(self, msg):
         try:
@@ -71,7 +74,10 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             if not body:
                 return
             if from_jid not in self.client_roster or self.client_roster[from_jid]['subscription']!='both':
-                msg.reply('You have not subscribed to this group.').send()
+                if self.client_roster[from_jid]['subscription']=='from':
+                    msg.reply(_('You have not accept the buddy request.')).send()
+                else:
+                    msg.reply(_('You have not joined this group.')).send()
                 return
             if len(body)>1 and body[0] in config.command_prefix:
                 command.trigger(self, msg)
@@ -83,7 +89,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         except SystemExit:
             raise
         except Exception as e:
-            sys.stderr.write('Exception: %s\n' % e)
+            sys.stderr.write('Exception: %s: %s\n' % (type(e).__name__, e))
 
     def dispatch_message(self, from_jid, body):
         self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))

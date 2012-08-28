@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sleekxmpp
+import re
 
 import config
 
@@ -49,9 +50,38 @@ def getjid(xmpp, nick_or_jid):
         return None
 
 def isnickvalid(nick):
-    return nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('/' not in nick) and ('?' not in nick) and ('*' not in nick)
+    return nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('?' not in nick) and ('*' not in nick) and (nick.lower()!='root') and (nick.lower()!='admin') and (nick.lower()!='administrator')
 
 def isjidvalid(jid):
     return jid and 0<jid.find('@')<len(jid)-1
+
+def replace_prefix(s, prefix):
+    res=''
+    lastisslash=False
+    for i in prefix:
+        if lastisslash:
+            if i='-':
+                res+=prefix
+            else:
+                res+=i
+            lastisslash=False
+        elif i=='/':
+            lastisslash=True
+        else:
+            res+=prefix
+    if lastisslash:
+        res+='/'
+    return res
+
+def replace_glob_to_regex(glob):
+    res=''
+    for i in glob:
+        if i=='*':
+            res+='.*'
+        elif i=='?':
+            res+='.'
+        else:
+            res+=re.escape(i)
+    return res
 
 # vim: et ft=python sts=4 sw=4 ts=4

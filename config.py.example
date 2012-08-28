@@ -4,7 +4,7 @@ JID = 'group@example.com/bot'
 password = '********'
 admins = ['you@example.com', 'another@example.com']
 
-command_prefix = '/-)' # A message starting with one of these characters will trigger a specific command
+command_prefix = '-/)' # A message starting with one of these characters will trigger a specific command
 
 welcome_message = 'Welcome to join this group, for help, type -help'
 
