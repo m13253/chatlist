@@ -74,7 +74,7 @@ def trigger(xmpp, msg):
             elif len(cmd)>=2:
                 new_nick=cmd[1]
                 for i in cmd[2:]:
-                    new_nick+=i
+                    new_nick+=i.capitalize()
                 if not misc.isnickvalid(new_nick):
                     msg.reply(_('Nickname %s not vaild.') % new_nick).send()
                 elif misc.getnick(xmpp, new_nick):
