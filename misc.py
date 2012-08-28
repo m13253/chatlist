@@ -50,10 +50,12 @@ def getjid(xmpp, nick_or_jid):
         return None
 
 def isnickvalid(nick):
-    return nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('?' not in nick) and ('*' not in nick) and (nick.lower()!='root') and (nick.lower()!='admin') and (nick.lower()!='administrator')
+    nick=str(nick)
+    return bool(nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('?' not in nick) and ('*' not in nick) and (nick.lower()!='root') and (nick.lower()!='admin') and (nick.lower()!='administrator'))
 
 def isjidvalid(jid):
-    return jid and 0<jid.find('@')<len(jid)-1
+    jid=str(jid)
+    return bool(jid and 0<jid.find('@')<len(jid)-1)
 
 def replace_prefix(s, prefix):
     res=''
