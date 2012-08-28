@@ -18,37 +18,6 @@ def trigger(xmpp, msg):
         if not cmd:
             return
 
-        if cmd[0]=='eval':
-            if from_jid in config.admins:
-                msg.reply(str(eval(msg['body'].split(None, 1)[1]))).send()
-            else:
-                msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
-            return
-
-        if cmd[0]=='exec':
-            if from_jid in config.admins:
-                exec(msg['body'].split(None, 1)[1])
-                msg.reply(_('Command executed.')).send()
-            else:
-                msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
-            return
-
-        if cmd[0]=='say':
-            for l in msg['body'].split(None, 1)[1].splitlines():
-                xmpp.dispatch_message(from_jid, l)
-            return
-
-        if cmd[0]=='msg':
-            if len(cmd)>=2:
-                to_jid=misc.getjid(xmpp, cmd[1])
-                if to_jid:
-                    xmpp.send_message(mto=to_jid, mbody='%s (%s):' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
-                else:
-                    msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
-            else:
-                
-            return
-
         if cmd[0] in ('users', 'user', 'names', 'name', 'list', 'dir', 'la'):
             cmd[0]='ls'
             cmd.append('-a')
@@ -79,9 +48,42 @@ def trigger(xmpp, msg):
             cmd[0]='kick'
         elif cmd[0] in ('mv', 'move', 'ren', 'rename'):
             cmd[0]='setnick'
+        elif cmd[0]=='run':
+            cmd[0]='system'
         elif len(cmd[0])>4 and cmd[0].startswith('init'):
             cmd.insert(1, cmd[0][4:])
             cmd[0]='init'
+
+        if cmd[0]=='eval':
+            if from_jid in config.admins:
+                msg.reply(str(eval(msg['body'].split(None, 1)[1]))).send()
+            else:
+                msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
+            return
+
+        if cmd[0]=='exec':
+            if from_jid in config.admins:
+                exec(msg['body'].split(None, 1)[1])
+                msg.reply(_('Command executed.')).send()
+            else:
+                msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
+            return
+
+        if cmd[0]=='say':
+            for l in msg['body'].split(None, 1)[1].splitlines():
+                xmpp.dispatch_message(from_jid, l)
+            return
+
+        if cmd[0]=='msg':
+            if len(cmd)>=2:
+                to_jid=misc.getjid(xmpp, cmd[1])
+                if to_jid:
+                    xmpp.send_message(mto=to_jid, mbody='%s (%s):' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
+                else:
+                    msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+            else:
+                msg.reply(misc.replace_prefix(_('Error: /-setnick takes exactly two arguments.'), prefix)).send()
+            return
 
         if cmd[0]=='help':
             if len(cmd)<2:
