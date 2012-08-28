@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import os
 import random
 import sleekxmpp
 import sys
+import time
 
 import command
 import config
@@ -22,11 +24,13 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.get_roster()
         self.auto_authorize = True
         self.auto_subscribe = True
+        sys.stderr.write('roster = [\n')
         for i in self.client_roster:
             if self.client_roster[i]['to']:
-                sys.stderr.write('Add %s' % i)
+                sys.stderr.write('\t%s' % i)
                 misc.add_nicktable(self, i)
                 sys.stderr.write('\n')
+        sys.stderr.write(']\n')
 
     def subscribe(self, presence):
         sys.stderr.write('%s subscribed me.\n' % presence['from'])
@@ -46,11 +50,20 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.send_except(jid, '%s has joined the group.' % to_nick)
 
     def unsubscribe(self, presence):
-        self.client_roster.unsubscribe(presence['from'].bare)
+        from_jid=sleekxmpp.JID(presence['from']).bare
+        from_nick=misc.getnick(self, from_jid)
+        try:
+            self.del_roster_item(from_jid)
+            self.client_roster.remove(from_jid)
+        except:
+            pass
         sys.stderr.write('%s unsubscribed me.\n' % presence['from'])
+        self.send_except(from_jid, '%s has quited the group.' % from_nick)
 
     def message(self, msg):
         try:
+            if misc.quiting:
+                return
             if msg['type'] not in ('chat', 'normal'):
                 return
             from_jid=msg['from'].bare
@@ -87,6 +100,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     pass
 
 if __name__=='__main__':
+    misc.restarting=False
     try:
         xmpp=XMPPBot(config.JID, config.password)
         xmpp.register_plugin('xep_0030') # Service Discovery
@@ -95,15 +109,24 @@ if __name__=='__main__':
         xmpp.register_plugin('xep_0199') # XMPP Ping
         if xmpp.connect():
             xmpp.process(block=True)
-    except KeyboardInterrupt:
+        else:
+            sys.stderr.write('Connection error.')
+            time.sleep(10)
+            misc.restarting=True
+        raise SystemExit
+    except UnicodeEncodeError:
+        pass
+    except (SystemExit, KeyboardInterrupt):
         sys.stderr.write('Quiting...')
         xmpp.disconnect(wait=True)
         sys.stderr.write('\n')
-    except UnicodeEncodeError:
-        pass
-    except SystemExit:
-        xmpp.disconnect(wait=True)
-        raise
+        if misc.restarting:
+            sys.stderr.write('Restarting.\n')
+            try:
+                os.execlp('python3', 'python3', __file__)
+            except:
+                os.execlp('python', 'python', __file__)
+        raise SystemExit
     except Exception as e:
         sys.stderr.write('Exception: %s\n' %s)
 

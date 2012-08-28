@@ -2,6 +2,10 @@
 
 import sleekxmpp
 
+import config
+
+restarting = False
+quiting = False
 nick_table = {}
 
 def add_nicktable(xmpp, jid):
@@ -27,7 +31,7 @@ def get_nicktable(xmpp, nick):
 def getnick(xmpp, nick_or_jid):
     if nick_or_jid in nick_table:
         return nick_or_jid
-    elif nick_or_jid in xmpp.client_roster and xmpp.client_roster[nick_or_jid]['to']:
+    elif isjidvalid(nick_or_jid) and nick_or_jid in xmpp.client_roster and xmpp.client_roster[nick_or_jid]['to']:
         nick=xmpp.client_roster[nick_or_jid]['name']
         if nick:
             return nick
@@ -39,9 +43,15 @@ def getnick(xmpp, nick_or_jid):
 def getjid(xmpp, nick_or_jid):
     if nick_or_jid in nick_table:
         return nick_table[nick_or_jid]
-    elif nick_or_jid in xmpp.client_roster and xmpp.client_roster[nick_or_jid]['to']:
+    elif isjidvalid(nick_or_jid) and nick_or_jid in xmpp.client_roster and xmpp.client_roster[nick_or_jid]['to']:
         return nick_or_jid
     else:
         return None
+
+def isnickvalid(nick):
+    return nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('/' not in nick) and ('?' not in nick) and ('*' not in nick)
+
+def isjidvalid(jid):
+    return jid and 0<jid.find('@')<len(jid)-1
 
 # vim: et ft=python sts=4 sw=4 ts=4
