@@ -38,6 +38,17 @@ def trigger(xmpp, msg):
                 xmpp.dispatch_message(from_jid, l)
             return
 
+        if cmd[0]=='msg':
+            if len(cmd)>=2:
+                to_jid=misc.getjid(xmpp, cmd[1])
+                if to_jid:
+                    xmpp.send_message(mto=to_jid, mbody='%s (%s):' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
+                else:
+                    msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+            else:
+                
+            return
+
         if cmd[0] in ('users', 'user', 'names', 'name', 'list', 'dir', 'la'):
             cmd[0]='ls'
             cmd.append('-a')
@@ -54,17 +65,23 @@ def trigger(xmpp, msg):
         elif cmd[0] in ('stat', 'whowas', 'dig', 'nslookup'):
             cmd[0]='whois'
         elif cmd[0] in ('iam', 'whoami'):
-            cmd=['whois', from_jid]
+            cmd[0]=['whois', from_jid]
+        elif cmd[0] in ('pm', 'dm', 'query'):
+            cmd[0]='msg'
         elif cmd[0] in ('test', 'traceroute', 'tracert', 'pong'):
             cmd[0]='ping'
-        elif cmd[0] in ('poweroff', 'halt', 'init0'):
+        elif cmd[0] in ('poweroff', 'halt'):
             cmd[0]='shutdown'
-        elif cmd[0] in ('restart', 'reboot', 'init6'):
-            cmd=['shutdown', '-r']
+        elif cmd[0] in ('restart', 'reboot'):
+            cmd[0]='shutdown'
+            cmd.append('-r')
         elif cmd[0] in ('rm', 'del', 'remove'):
-            cmd='kick'
+            cmd[0]='kick'
         elif cmd[0] in ('mv', 'move', 'ren', 'rename'):
-            cmd='setnick'
+            cmd[0]='setnick'
+        elif len(cmd[0])>4 and cmd[0].startswith('init'):
+            cmd.insert(1, cmd[0][4:])
+            cmd[0]='init'
 
         if cmd[0]=='help':
             if len(cmd)<2:
@@ -95,14 +112,18 @@ def trigger(xmpp, msg):
 
         if cmd[0]=='init':
             if len(cmd)==2:
+                if cmd[1]=='S':
+                    cmd[1]='single'
                 if from_jid in config.admins:
                     xmpp.send_except(None, _('INIT: Switching to runlevel: %s') % cmd[1])
                 else:
                     xmpp.send_message(mto=from_jid, mbody=_('INIT: Switching to runlevel: %s') % cmd[1], mtype='chat')
                 if cmd[1]=='0':
-                    cmd=['shutdown']
+                    cmd[0]='shutdown'
+                    del cmd[1]
                 elif cmd[1]=='6':
-                    cmd=['shutdown', '-r']
+                    cmd[0]='shutdown'
+                    cmd[1]='-r'
                 else:
                     return
             elif len(cmd)==1:
@@ -192,7 +213,7 @@ def trigger(xmpp, msg):
                     else:
                         msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
                     return
-                elif getjid(cmd[1])==from_jid:
+                elif misc.getjid(xmpp, cmd[1])==from_jid:
                     cmd[0]='nick'
                     del cmd[1]
                 else:
