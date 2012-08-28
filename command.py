@@ -17,7 +17,7 @@ def trigger(xmpp, msg):
         if not cmd:
             return
         if cmd[0]=='quit':
-            msg.reply(_('You have quited from this group.')).send()
+            msg.reply(_('You have quited this group.')).send()
             to_nick=misc.getnick(xmpp, from_jid)
             misc.del_nicktable(xmpp, from_jid)
             try:
@@ -25,7 +25,7 @@ def trigger(xmpp, msg):
                 xmpp.client_roster.remove(from_jid)
             except:
                 pass
-            xmpp.send_except(_('%s has quited from this group.') % to_nick)
+            xmpp.send_except(_('%s has quited this group.') % to_nick)
         elif cmd[0]=='ping':
             msg.reply('Pong!').send()
         elif cmd[0]=='shutdown':
@@ -83,7 +83,7 @@ def trigger(xmpp, msg):
                     oldnick=misc.getnick(xmpp, from_jid)
                     misc.change_nicktable(xmpp, from_jid, new_nick)
                     xmpp.update_roster(from_jid, name=new_nick)
-                    xmpp.send_except(None, _('%s changed its nick to %s') % (oldnick, new_nick))
+                    xmpp.send_except(None, _('%s changed its nick to %s.') % (oldnick, new_nick))
             else:
                 msg.reply(misc.replace_prefix(_('Error: /-nick takes exactly one argument.'), prefix)).send()
         elif cmd[0]=='setnick':
@@ -101,7 +101,7 @@ def trigger(xmpp, msg):
                             xmpp.update_roster(cmd[1], name=cmd[2])
                             xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (oldnick, cmd[2]))
                     else:
-                        msg.reply(_('User %s is not a member of this group.') % (cmd[1])).send()
+                        msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
                 else:
                     msg.reply(misc.replace_prefix(_('Error: /-setnick takes exactly two arguments.'), prefix)).send()
             else:

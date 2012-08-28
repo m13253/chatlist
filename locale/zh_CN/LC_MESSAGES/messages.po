@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Language: zh_CN\n"
+"Content-Type: test/plain; charset=utf-8\n"
+
+#: chatlist.py:53
+#, python-format
+msgid "%s has joined this group."
+msgstr "%s 已加入本群。"
+
+#: chatlist.py:64 command.py:28
+#, python-format
+msgid "%s has quited this group."
+msgstr "%s 已退出本群。"
+
+#: chatlist.py:78
+msgid "You have not accept the buddy request."
+msgstr "您还没有接受好友请求。"
+
+#: chatlist.py:80
+msgid "You have not joined this group."
+msgstr "您还没有加入本群。"
+
+#: command.py:20
+msgid "You have quited this group."
+msgstr "您已退出本群。"
+
+#: command.py:41
+msgid "Restarting."
+msgstr "正在重新启动。"
+
+#: command.py:43
+#, python-format
+msgid "Restarting by %s."
+msgstr "正在被 %s 重新启动。"
+
+#: command.py:45
+msgid "Shutting down."
+msgstr "正在关闭。"
+
+#: command.py:47
+#, python-format
+msgid "Shutting down by %s."
+msgstr "正在被 %s 关闭。"
+
+#: command.py:50 command.py:70 command.py:108
+msgid "Error: Permission denied."
+msgstr "错误：权限不够。"
+
+#: command.py:57
+#, python-format
+msgid "You have been kicked by %s."
+msgstr "你已被 %s 踢出。"
+
+#: command.py:65
+#, python-format
+msgid "%s has been kicked by %s."
+msgstr "%s 已被 %s 踢出。"
+
+#: command.py:68 command.py:104
+#, python-format
+msgid "Error: User %s is not a member of this group."
+msgstr "错误：用户 %s 不是本群的成员。"
+
+#: command.py:73
+#, python-format
+msgid "Your current nickname is %s."
+msgstr "您当前的昵称是 %s。"
+
+#: command.py:79 command.py:95
+#, python-format
+msgid "Nickname %s not vaild."
+msgstr "昵称 %s 无效。"
+
+#: command.py:81 command.py:97
+#, python-format
+msgid "Nickname %s is already in use."
+msgstr "昵称 %s 已被使用。"
+
+#: command.py:86
+#, python-format
+msgid "%s changed its nick to %s."
+msgstr "%s 已改名为 %s。"
+
+#: command.py:88
+msgid "Error: /-nick takes exactly one argument."
+msgstr "错误：/-nick 需要恰好一个参数。"
+
+#: command.py:102
+#, python-format
+msgid "%s is forced to changed its nick to %s."
+msgstr "%s 已被迫改名为 %s。"
+
+#: command.py:106
+msgid "Error: /-setnick takes exactly two arguments."
+msgstr "错误：/-setnick 需要恰好两个参数。"
+
+#: command.py:128 command.py:134 command.py:136
+msgid "Error: Unknown command. For help, type /-help"
+msgstr "错误：未知命令。键入 /- 以寻求帮助。"
+
+#: command.py:132
+msgid "Command executed."
+msgstr "命令已执行。"
+
+#: command.py:141
+#, python-format
+msgid "An error occured: %s: %s"
+msgstr "发生了一个错误：%s: %s"

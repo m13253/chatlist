@@ -49,7 +49,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         to_nick='Guest'+str(to_nick)
         self.update_roster(jid, name=to_nick)
         misc.add_nicktable(self, jid)
-        self.send_message(mto=presence['from'], mbody=config.welcome_message, mtype='chat')
+        self.send_message(mto=presence['from'], mbody=misc.replace_prefix(config.welcome_message, config.command_prefix[0]), mtype='chat')
         self.send_except(jid, _('%s has joined this group.') % to_nick)
 
     def unsubscribe(self, presence):
