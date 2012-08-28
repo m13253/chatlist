@@ -96,7 +96,7 @@ def trigger(xmpp, msg):
                 else:
                     return
             elif len(cmd)==1:
-                msg.reply(misc.replace_prefix(_('Error: /-init must be run as PID 1.'), perfix)).send()
+                msg.reply(misc.replace_prefix(_('Error: /-init must be run as PID 1.'), prefix)).send()
                 return
             else:
                 msg.reply(misc.replace_prefix(_('Error: /-init takes exactly one argument.'), perfix)).send()
