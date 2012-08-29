@@ -303,7 +303,7 @@ def trigger(xmpp, msg):
                         else:
                             if isAdmin:
                                 s+='\t(%s)' % i
-            s+=_('\nTotal %d') % user_count
+            s+='\n'+(_('Total %d') % user_count)
             msg.reply(s).send()
             return
 
