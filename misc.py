@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+import errno
+import pickle
 import sleekxmpp
+import sys
 import re
 
 import config
@@ -85,5 +88,29 @@ def replace_glob_to_regex(glob):
         else:
             res+=re.escape(i)
     return res
+
+data = {}
+
+def load_data(filename=config.datafile):
+    try:
+        f=open(filename, 'rb')
+        try:
+            data=pickle.load(f)
+        except (pickler.PickleError, ValueError):
+            sys.stderr.write('Error when loading profile. Created an empty one.\n')
+        finally:
+            f.close()
+    except IOError as e:
+        if e.errno==errno.ENOENT:
+            sys.stderr.write('Created an empty profile.\n')
+        else:
+            raise
+
+def save_data(filename=config.datafile):
+    f=open(filename, 'wb')
+    try:
+        pickle.dump(data, f)
+    finally:
+        f.close()
 
 # vim: et ft=python sts=4 sw=4 ts=4

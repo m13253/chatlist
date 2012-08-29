@@ -3,6 +3,7 @@
 JID = 'group@example.com/bot'
 password = '********'
 admins = ['you@example.com', 'another@example.com']
+datafile = 'data/data.db' # will be automatically created
 
 command_prefix = '-/)' # A message starting with one of these characters will trigger a specific command
 
