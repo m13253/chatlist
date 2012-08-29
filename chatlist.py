@@ -118,6 +118,9 @@ if __name__=='__main__':
     misc.restarting=False
     misc.quiting=False
     misc.load_data()
+    for i in ('stop', 'quiet'):
+        if i not in misc.data:
+            misc.data[i]={}
     try:
         try:
             xmpp=XMPPBot(config.JID, config.password)

@@ -35,7 +35,7 @@ def trigger(xmpp, msg):
             cmd[0]='whois'
         elif cmd[0] in ('iam', 'whoami'):
             cmd[0]=['whois', from_jid]
-        elif cmd[0] in ('pm', 'dm', 'query'):
+        elif cmd[0] in ('pm', 'dm', 'query', 'tell'):
             cmd[0]='msg'
         elif cmd[0] in ('test', 'traceroute', 'tracert', 'pong'):
             cmd[0]='ping'
@@ -44,12 +44,26 @@ def trigger(xmpp, msg):
         elif cmd[0] in ('restart', 'reboot'):
             cmd[0]='shutdown'
             cmd.append('-r')
-        elif cmd[0] in ('rm', 'del', 'remove'):
+        elif cmd[0] in ('rm', 'del', 'remove', 'delete'):
             cmd[0]='kick'
         elif cmd[0] in ('mv', 'move', 'ren', 'rename'):
             cmd[0]='setnick'
         elif cmd[0]=='run':
             cmd[0]='system'
+        elif cmd[0]=='quote':
+            cmd[0]='say'
+        elif cmd[0]=='action':
+            cmd[0]='me'
+        elif cmd[0] in ('pause', 'sleep', 'delay'):
+            cmd[0]='stop'
+        elif cmd[0]=='on':
+            cmd=['stop', 'off']
+        elif cmd[0]=='off':
+            cmd=['stop', 'forever']
+        elif cmd[0]=='mute':
+            cmd[0]='quiet'
+        elif cmd[0] in ('part', 'leave', 'exit', 'bye'):
+            cmd[0]='quit'
         elif len(cmd[0])>4 and cmd[0].startswith('init'):
             cmd.insert(1, cmd[0][4:])
             cmd[0]='init'
