@@ -134,7 +134,7 @@ def trigger(xmpp, msg):
         if not cmd[0].startswith(':') and cmd[0] in help_msg:
             for i in cmd[1:]:
                 if i=='--help':
-                    msg.reply(misc.replace_prefix(help_msg[cmd[0]], prefix)).send()
+                    msg.reply('\n'+misc.replace_prefix(help_msg[cmd[0]], prefix).strip('\n')).send()
                     return
 
         if cmd[0]=='init':
