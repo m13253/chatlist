@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-30 00:47+0800\n"
+"POT-Creation-Date: 2012-08-30 01:42+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "键入 /-help 以寻求更多帮助。"
 msgid "%s has joined this group."
 msgstr "%s 已加入本群。"
 
-#: chatlist.py:73 command.py:168
+#: chatlist.py:73 command.py:172
 #, python-format
 msgid "%s has quited this group."
 msgstr "%s 已退出本群。"
@@ -46,130 +46,130 @@ msgstr "您还没有接受好友请求。"
 msgid "You have not joined this group."
 msgstr "您还没有加入本群。"
 
-#: command.py:75 command.py:83 command.py:310
+#: command.py:79 command.py:87 command.py:314
 msgid "Error: Unknown command. For help, type /-help"
 msgstr "错误：未知命令。键入 /-help 以寻求帮助。"
 
-#: command.py:81
+#: command.py:85
 msgid "Command executed."
 msgstr "命令已执行。"
 
-#: command.py:101
+#: command.py:105
 msgid "DM"
 msgstr "私信"
 
-#: command.py:102
+#: command.py:106
 msgid "Your message has been sent."
 msgstr "您的消息已送出。"
 
-#: command.py:104 command.py:218 command.py:238
+#: command.py:108 command.py:222 command.py:242
 #, python-format
 msgid "Error: User %s is not a member of this group."
 msgstr "错误：用户 %s 不是本群的成员。"
 
-#: command.py:106 command.py:247
+#: command.py:110 command.py:251
 msgid "Error: /-setnick takes exactly two arguments."
 msgstr "错误：/-setnick 需要恰好两个参数。"
 
-#: command.py:126
+#: command.py:130
 #, python-format
 msgid "Error: No help message for %s."
 msgstr "错误：没有 %s 的帮助消息。"
 
-#: command.py:141 command.py:143
+#: command.py:145 command.py:147
 #, python-format
 msgid "INIT: Switching to runlevel: %s"
 msgstr "INIT：切换到运行级别：%s"
 
-#: command.py:153
+#: command.py:157
 msgid "Error: /-init must be run as PID 1."
 msgstr "错误：/-init 必须以 PID 1 执行。"
 
-#: command.py:156
+#: command.py:160
 #, fuzzy
 msgid "Error: /-init takes exactly one argument."
 msgstr "错误：/-nick 需要恰好一个参数。"
 
-#: command.py:160
+#: command.py:164
 msgid "You have quited this group."
 msgstr "您已退出本群。"
 
-#: command.py:189
+#: command.py:193
 msgid "Restarting."
 msgstr "正在重新启动。"
 
-#: command.py:191
+#: command.py:195
 #, python-format
 msgid "Restarting by %s."
 msgstr "正在被 %s 重新启动。"
 
-#: command.py:193
+#: command.py:197
 msgid "Shutting down."
 msgstr "正在关闭。"
 
-#: command.py:195
+#: command.py:199
 #, python-format
 msgid "Shutting down by %s."
 msgstr "正在被 %s 关闭。"
 
-#: command.py:198 command.py:220 command.py:244
+#: command.py:202 command.py:224 command.py:248
 msgid "Error: Permission denied."
 msgstr "错误：权限不够。"
 
-#: command.py:207
+#: command.py:211
 #, python-format
 msgid "You have been kicked by %s."
 msgstr "你已被 %s 踢出。"
 
-#: command.py:215
+#: command.py:219
 #, python-format
 msgid "%s has been kicked by %s."
 msgstr "%s 已被 %s 踢出。"
 
-#: command.py:229 command.py:258
+#: command.py:233 command.py:262
 #, python-format
 msgid "Nickname %s not vaild."
 msgstr "昵称 %s 无效。"
 
-#: command.py:231 command.py:260
+#: command.py:235 command.py:264
 #, python-format
 msgid "Nickname %s is already in use."
 msgstr "昵称 %s 已被使用。"
 
-#: command.py:236
+#: command.py:240
 #, python-format
 msgid "%s is forced to changed its nick to %s."
 msgstr "%s 已被迫改名为 %s。"
 
-#: command.py:252
+#: command.py:256
 #, python-format
 msgid "Your current nickname is %s."
 msgstr "您当前的昵称是 %s。"
 
-#: command.py:265
+#: command.py:269
 #, python-format
 msgid "%s changed its nick to %s."
 msgstr "%s 已改名为 %s。"
 
-#: command.py:267
+#: command.py:271
 msgid "Error: /-nick takes exactly one argument."
 msgstr "错误：/-nick 需要恰好一个参数。"
 
-#: command.py:302 misc.py:224
+#: command.py:306 misc.py:224
 msgid "unavailable"
 msgstr "离线"
 
-#: command.py:306
+#: command.py:310
 #, python-format
 msgid "Total %d"
 msgstr "总计 %d"
 
-#: command.py:315
+#: command.py:319
 #, python-format
 msgid "An error occured: %s: %s"
 msgstr "发生了一个错误：%s: %s"
 
-#: command.py:322
+#: command.py:326
 msgid ""
 "\n"
 "Common commands:\n"
@@ -185,8 +185,8 @@ msgid ""
 msgstr ""
 "\n"
 "常用命令：\n"
-"\t/-ls\t列出在线用户。使用 /-s -a 列出全部用户。\n"
-"\t/-nick\t修改昵称或获取当前昵称。\n"
+"\t/-ls\t列出在线用户。使用 /-ls -a 列出全部用户。\n"
+"\t/-nick\t更改昵称或获取当前昵称。\n"
 "\t/-say\t发送一条消息，尤其是以 /- 开头的消息。\n"
 "\t/-whois\t获取特定用户的个人信息。\n"
 "\t/-ping\t测试您是否在线。\n"
@@ -194,7 +194,7 @@ msgstr ""
 "\t/-about\t查看为本群提供动力的程序——chatlist 的信息。\n"
 "键入 /-help 后跟命令名称，以查看该命令的帮助。\n"
 
-#: command.py:333
+#: command.py:337
 msgid ""
 "\n"
 "Administrative commands:\n"
@@ -207,10 +207,10 @@ msgstr ""
 "管理命令：\n"
 "\t/-kick\t将某人踢出本群。\n"
 "\t/-shutdown\t关闭本群程序。使用 /-shutdown -r 以重新启动。\n"
-"\t/-setnick\t修改其他用户的昵称。\n"
+"\t/-setnick\t更改他人的昵称。\n"
 "键入 /-help danger 查看更多。\n"
 
-#: command.py:340
+#: command.py:344
 msgid ""
 "\n"
 "Danger zone:\n"
@@ -225,6 +225,143 @@ msgstr ""
 "\t/-exec\t执行一个 Python 命令。\n"
 "\t/-system\t执行一个系统命令。\n"
 "*谨慎使用这些命令！*\n"
+
+#: command.py:351
+msgid ""
+"\n"
+"This group is powered by chatlist,\n"
+"A XMPP chat program that bounces messages to all its subscribers.\n"
+"\n"
+"Released under LGPL 3.0+\n"
+"\n"
+"Visit project repository: https://github.com/m13253/chatlist\n"
+msgstr ""
+"\n"
+"本群由 chatlist——一个转发消息到所有订阅者的 XMPP 群聊程序——提供动力。"
+"\n"
+"以 LGPL 3.0+ 许可证发布。\n"
+"\n"
+"访问项目仓库： https://github.com/m13253/chatlist\n"
+
+#: command.py:359
+msgid ""
+"\n"
+"See information about the program powering this group -- chatlist.\n"
+"\n"
+"Usage: /-about\n"
+msgstr ""
+"\n"
+"查看为本群提供动力的程序——chatlist 的信息。\n"
+"\n"
+"用法：/-about\n"
+
+#: command.py:364
+msgid ""
+"\n"
+"List users, by default, list only online users.\n"
+"\n"
+"Usage: /-ls [-a] [-l]\n"
+"\t-a\tList all users instead of only online users.\n"
+"\t-l\tShow user status.\n"
+"\n"
+"Alias: /-la /-ll /-lla /-lal\n"
+msgstr ""
+"\n"
+"列出用户，默认仅列出在线用户。\n"
+"\n"
+"用法：/-ls [-a] [-l]\n"
+"\t-a\t列出所有用户而非仅在线用户。\n"
+"\t-l\t显示用户状态。\n"
+"\n"
+"别名：/-la /-ll /-lla /-lal\n"
+
+#: command.py:373
+msgid ""
+"\n"
+"Change nickname or get current nickname.\n"
+"\n"
+"Usage: /-nick <nickname>\n"
+"\n"
+"Nickname must not contain these characters: @ ? *\n"
+"Nickname starting with - is also unacceptable.\n"
+"\n"
+"Alias: /-nickname /-alias\n"
+msgstr ""
+"\n"
+"更改昵称或获取当前昵称。\n"
+"\n"
+"用法：/-nick <昵称>\n"
+"\n"
+"昵称不能包含这些字符：@ ? *\n"
+"以 - 开头的昵称也不被接受。"
+"\n"
+"别名：/-nickname /-alias\n"
+
+#: command.py:383
+msgid ""
+"\n"
+"Change nickname of another user.\n"
+"\n"
+"Usage: /-setnick <target> <nickname>\n"
+"\n"
+"Alias: /-mv /-move /-ren /-rename\n"
+msgstr ""
+"\n"
+"更改他人的昵称。\n"
+"\n"
+"用法：/-setnick <目标> <昵称>\n"
+"\n"
+"别名：/-mv /-move /-ren /-rename\n"
+
+#: command.py:390
+msgid ""
+"\n"
+"Shutdown this group program.\n"
+"\n"
+"Usage: /-shutdown [-r] [-q]\n"
+"\t-r\tRestart this program after shutting down.\n"
+"\t-q\tQuiet mode. Do not broadcast message when shutting down.\n"
+"\n"
+"Alias: /-halt /-restart /-poweroff /-reboot\n"
+msgstr ""
+"\n"
+"关闭此群程序。\n"
+"\n"
+"用法：/-shutdown [-r] [-q]\n"
+"\t-r\t关闭后重新启动此程序。\n"
+"\t-q\t静默模式。关闭时不要广播消息。\n"
+"\n"
+"别名：/-halt /-restart /-poweroff /-reboot\n"
+
+#: command.py:399
+msgid ""
+"\n"
+"Process control initialization\n"
+"INIT is the parent of all processes.\n"
+"\n"
+"Usage: /-init [123456S]\n"
+msgstr ""
+"\n"
+"进程控制初始化\n"
+"INIT 是所有进程的父进程。\n"
+"\n"
+"用法：/-init [123456S]\n"
+
+#: command.py:405
+msgid ""
+"\n"
+"See help contents of a specific command.\n"
+"\n"
+"Usage: /-help <command>\n"
+"\n"
+"Alias: /-man /-info\n"
+msgstr ""
+"\n"
+"查看特定命令的帮助主题。\n"
+"\n"
+"用法：/-help <命令>\n"
+"\n"
+"别名：/-man /-info\n"
 
 #: misc.py:214
 msgid "available"
