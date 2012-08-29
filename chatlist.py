@@ -117,6 +117,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 if __name__=='__main__':
     misc.restarting=False
     misc.quiting=False
+    misc.load_data()
     try:
         try:
             xmpp=XMPPBot(config.JID, config.password)
@@ -138,6 +139,7 @@ if __name__=='__main__':
     except (SystemExit, KeyboardInterrupt):
         sys.stderr.write('Quiting...')
         xmpp.disconnect(wait=True)
+        misc.save_data()
         sys.stderr.write('\n')
         if misc.restarting:
             sys.stderr.write('Restarting.\n')

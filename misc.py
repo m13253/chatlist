@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import errno
+import os
 import pickle
 import sleekxmpp
 import sys
@@ -107,10 +108,14 @@ def load_data(filename=config.datafile):
             raise
 
 def save_data(filename=config.datafile):
-    f=open(filename, 'wb')
+    save_okay=False
+    f=open(filename+'~', 'wb')
     try:
         pickle.dump(data, f)
+        save_okay=True
     finally:
         f.close()
+    if save_okay:
+        os.rename(filename+'~', filename)
 
 # vim: et ft=python sts=4 sw=4 ts=4
