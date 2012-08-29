@@ -88,11 +88,18 @@ def trigger(xmpp, msg):
                 xmpp.dispatch_message(from_jid, l)
             return
 
+        if cmd[0]=='me':
+            from_nick=misc.getnick(xmpp, from_jid)
+            for l in msg['body'].split(None, 1)[1].splitlines():
+                xmpp.send_except(None, '* %s %s' % (from_nick, l))
+            return
+
         if cmd[0]=='msg':
             if len(cmd)>=2:
                 to_jid=misc.getjid(xmpp, cmd[1])
                 if to_jid:
                     xmpp.send_message(mto=to_jid, mbody='%s (%s): %s' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
+                    msg.reply(_('Your message has been sent.'))
                 else:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
@@ -263,17 +270,40 @@ def trigger(xmpp, msg):
         if cmd[0]=='ls':
             isAdmin = from_jid in config.admins
             option_a = False
+            option_l = False
             for i in cmd[1:]:
                 if i.startswith('-'):
                     if 'a' in i:
                         option_a = True
+                    if 'l' in i:
+                        option_l = True
             s=''
+            user_count=0
             for i in xmpp.client_roster:
                 if xmpp.client_roster[i]['to']:
-                    if option_a or xmpp.client_roster[i].resources:
-                        s+='\n%s' % misc.getnick(xmpp, i)
-                        if isAdmin:
-                            s+='\t(%s)' % i
+                    to_resources=xmpp.client_roster[i].resources
+                    if option_a or to_resources:
+                        user_count+=1
+                        s+='\n\t%s' % misc.getnick(xmpp, i)
+                        if option_l:
+                            if to_resources:
+                                to_priority=-1
+                                to_show=''
+                                to_status='unavailable'
+                                for j in to_resources:
+                                    if to_resources[j]['priority']>to_priority or (to_resources[j]['priority']==to_priority and misc.compare_status(to_resources[j]['show'], to_status)>=0):
+                                        to_priority=to_resources[j]['priority']
+                                        to_show=to_resources[j]['show']
+                                        to_status=to_resources[j]['status']
+                                s+='\t(%s)' % misc.get_status_name(to_show)
+                                if to_status:
+                                    s+=' [%s]' % to_status
+                            else:
+                                s+='\t(%s)' % _('unavailable')
+                        else:
+                            if isAdmin:
+                                s+='\t(%s)' % i
+            s+=_('\nTotal %d') % user_count
             msg.reply(s).send()
             return
 

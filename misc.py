@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import errno
+import gettext
 import os
 import pickle
 import sleekxmpp
@@ -8,6 +9,8 @@ import sys
 import re
 
 import config
+
+gettext.install('messages', 'locale')
 
 restarting = False
 quiting = False
@@ -174,5 +177,52 @@ class TimeUnit(float):
         if not res or res=='-':
             res='0'
         return res
+
+def compare_status(a, b):
+    if not a or a=='available':
+        va=4
+    elif a=='chat':
+        va=5
+    elif a=='dnd' or a=='busy':
+        va=3
+    elif a=='away':
+        va=2
+    elif a=='xa' or a=='extended away':
+        va=1
+    elif a=='unavailable':
+        va=0
+    else:
+        va=6
+    if not b or b=='available':
+        vb=4
+    elif b=='chat':
+        vb=5
+    elif b=='dnd' or b=='busy':
+        vb=3
+    elif b=='away':
+        vb=2
+    elif b=='xa' or b=='extended away':
+        vb=1
+    elif b=='unavailable':
+        vb=0
+    else:
+        vb=6
+    return va-vb
+
+def get_status_name(s):
+    if not s or s=='available':
+        return _('available')
+    elif s=='chat':
+        return _('want chat')
+    elif s=='dnd' or s=='busy':
+        return _('do not disturb')
+    elif s=='away':
+        return _('away')
+    elif s=='xz' or s=='extended away':
+        return _('extended away')
+    elif s=='unavailable':
+        return _('unavailable')
+    else:
+        return s
 
 # vim: et ft=python sts=4 sw=4 ts=4
