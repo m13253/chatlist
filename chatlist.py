@@ -93,7 +93,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             else:
                 for l in body.splitlines():
                     self.dispatch_message(from_jid, l)
-        except UnicodeEncodeError:
+        except UnicodeError:
             pass
         except SystemExit:
             raise
@@ -116,21 +116,25 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 
 if __name__=='__main__':
     misc.restarting=False
+    misc.quiting=False
     try:
-        xmpp=XMPPBot(config.JID, config.password)
-        xmpp.register_plugin('xep_0030') # Service Discovery
-        xmpp.register_plugin('xep_0004') # Data Forms
-        xmpp.register_plugin('xep_0060') # PubSub
-        xmpp.register_plugin('xep_0199') # XMPP Ping
-        if xmpp.connect():
-            xmpp.process(block=True)
-        else:
-            sys.stderr.write('Connection error.')
+        try:
+            xmpp=XMPPBot(config.JID, config.password)
+            xmpp.register_plugin('xep_0030') # Service Discovery
+            xmpp.register_plugin('xep_0004') # Data Forms
+            xmpp.register_plugin('xep_0060') # PubSub
+            xmpp.register_plugin('xep_0199') # XMPP Ping
+            if xmpp.connect():
+                xmpp.process(block=True)
+            else:
+                sys.stderr.write('Connection error.')
+                time.sleep(10)
+                misc.restarting=True
+        except Exception as e:
+            sys.stderr.write('Exception: %s: %s\n' % (type(e).__name__, e))
             time.sleep(10)
             misc.restarting=True
         raise SystemExit
-    except UnicodeEncodeError:
-        pass
     except (SystemExit, KeyboardInterrupt):
         sys.stderr.write('Quiting...')
         xmpp.disconnect(wait=True)
@@ -142,7 +146,5 @@ if __name__=='__main__':
             except:
                 os.execlp('python', 'python', __file__)
         raise SystemExit
-    except Exception as e:
-        sys.stderr.write('Exception: %s\n' %s)
 
 # vim: et ft=python sts=4 sw=4 ts=4

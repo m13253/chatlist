@@ -156,6 +156,7 @@ def trigger(xmpp, msg):
 
         if cmd[0]=='shutdown':
             if from_jid in config.admins:
+                misc.quiting=True
                 quiet=False
                 for i in cmd[1:]:
                     if i.startswith('-'):
