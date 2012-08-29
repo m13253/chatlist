@@ -92,7 +92,7 @@ msgstr "错误：/-init 必须以 PID 1 执行。"
 #: command.py:160
 #, fuzzy
 msgid "Error: /-init takes exactly one argument."
-msgstr "错误：/-nick 需要恰好一个参数。"
+msgstr "错误：/-init 需要恰好一个参数。"
 
 #: command.py:164
 msgid "You have quited this group."
