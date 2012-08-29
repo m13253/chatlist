@@ -118,4 +118,61 @@ def save_data(filename=config.datafile):
     if save_okay:
         os.rename(filename+'~', filename)
 
+time_unit={'u': .000001, 'U': .000001, 'z': .001, 'Z': .001, 'S': 1, 's': 1, 'm': 60, 'H': 3600, 'h': 3600, 'D': 86400, 'd': 86400, 'M': 2629743.7710168, 'Y': 31556925.2522016, 'y': 31556925.2522016, 'C': 31556925252.2016, 'c': 31556925252.2016}
+time_unit_chars='cyMdhms'
+class TimeUnit(float):
+    def __new__(cls, s):
+        s=str(s)
+        if not s:
+            raise ValueError
+        if s[0]=='-':
+            isNeg=True
+            s=s[1:]
+        elif s[0]=='+':
+            isNeg=False
+            s=s[1:]
+        else:
+            isNeg=False
+        res=0
+        cur=''
+        for i in s:
+            if i.isdigit() or i=='.':
+                cur+=i
+            elif i in time_unit:
+                res+=float(cur)*time_unit[i]
+                cur=''
+            elif not i.isspace():
+                raise ValueError('invalid liternal for %s(): %s' % (cls, repr(s)))
+        if cur:
+            res+=float(cur)
+        if isNeg:
+            res=-res
+        return float.__new__(cls, res)
+    def __repr__(self):
+        return '%s(%s)' % (type(self).__name__, repr(str(self)))
+    def __str__(self):
+        value=float(self)
+        if value<0:
+            res='-'
+            value=-value
+        else:
+            res=''
+        for i in time_unit_chars[:-1]:
+            if value>=time_unit[i]:
+                times, value=divmod(value, time_unit[i])
+                times=int(times)
+                if times>0:
+                    res+=str(times)+i
+        i=time_unit_chars[-1]
+        if value+value>=time_unit[i]:
+            times, value=divmod(value, time_unit[i])
+            times=int(times)
+            if value+value>=time_unit[i]:
+                times+=1
+            if times>0:
+                res+=str(times)+i
+        if not res or res=='-':
+            res='0'
+        return res
+
 # vim: et ft=python sts=4 sw=4 ts=4
