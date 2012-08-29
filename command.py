@@ -46,6 +46,8 @@ def trigger(xmpp, msg):
             cmd.append('-r')
         elif cmd[0] in ('rm', 'del', 'remove', 'delete'):
             cmd[0]='kick'
+        elif cmd[0] in ('nickname', 'alias'):
+            cmd[0]='nick'
         elif cmd[0] in ('mv', 'move', 'ren', 'rename'):
             cmd[0]='setnick'
         elif cmd[0]=='run':
@@ -64,6 +66,8 @@ def trigger(xmpp, msg):
             cmd[0]='quiet'
         elif cmd[0] in ('part', 'leave', 'exit', 'bye'):
             cmd[0]='quit'
+        elif cmd[0]=='about':
+            cmd=['help', ':about']
         elif len(cmd[0])>4 and cmd[0].startswith('init'):
             cmd.insert(1, cmd[0][4:])
             cmd[0]='init'
@@ -135,7 +139,7 @@ def trigger(xmpp, msg):
 
         if cmd[0]=='init':
             if len(cmd)==2:
-                if cmd[1]=='S':
+                if cmd[1] in ('S', 's'):
                     cmd[1]='single'
                 if from_jid in config.admins:
                     xmpp.send_except(None, _('INIT: Switching to runlevel: %s') % cmd[1])
@@ -344,6 +348,67 @@ Danger zone:
 \t/-system\tExecute a system command.
 BE CAREFUL TO USE THESE COMMANDS!
 '''),
+    ':about': _('''
+This group is powered by chatlist,
+A XMPP chat program that bounces messages to all its subscribers.
+
+Released under LGPL 3.0+
+
+Visit project repository: https://github.com/m13253/chatlist
+'''),
+    'about': _('''
+See information about the program powering this group -- chatlist.
+
+Usage: /-about
+'''),
+    'ls': _('''
+List users, by default, list only online users.
+
+Usage: /-ls [-a] [-l]
+\t-a\tList all users instead of only online users.
+\t-l\tShow user status.
+
+Alias: /-la /-ll /-lla /-lal
+'''), 'la': '=ls', 'll': '=ls', 'lla': '=ls', '=lal': '=ls',
+    'nick': _('''
+Change nickname or get current nickname.
+
+Usage: /-nick <nickname>
+
+Nickname must not contain these characters: @ ? *
+Nickname starting with - is also unacceptable.
+
+Alias: /-nickname /-alias
+'''),
+    'setnick': _('''
+Change nickname of another user.
+
+Usage: /-setnick <target> <nickname>
+
+Alias: /-mv /-move /-ren /-rename
+'''), 'mv': '=setnick', 'move': '=setnick', 'ren': '=setnick', 'rename': '=setnick',
+    'shutdown': _('''
+Shutdown this group program.
+
+Usage: /-shutdown [-r] [-q]
+\t-r\tRestart this program after shutting down.
+\t-q\tQuiet mode. Do not broadcast message when shutting down.
+
+Alias: /-halt /-restart /-poweroff /-reboot
+'''), 'halt': '=shutdown', 'restart': '=shutdown', 'poweroff': '=shutdown', 'reboot': '=shutdown',
+    'init': _('''
+Process control initialization
+INIT is the parent of all processes.
+
+Usage: /-init [123456S]
+'''), 'init0': '=init', 'init6': '=init',
+    'help': _('''
+See help contents of a specific command.
+
+Usage: /-help <command>
+
+Alias: /-man /-info
+'''), 'man': '=help', 'info': '=help',
 # TODO: more help coming soon.
 }
 
