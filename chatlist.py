@@ -88,6 +88,9 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 else:
                     msg.reply(_('You have not joined this group.')).send()
                 return
+            if len(body)>280:
+                msg.reply(_('Your message is too long, please consider using a pastebin.')).send()
+                return
             if len(body)>1 and body[0] in config.command_prefix:
                 command.trigger(self, msg)
             else:
