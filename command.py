@@ -354,7 +354,7 @@ A XMPP chat program that bounces messages to all its subscribers.
 
 Released under LGPL 3.0+
 
-Visit project repository: https://github.com/m13253/chatlist
+Visit project repository: https:////github.com//m13253//chatlist
 '''),
     'about': _('''
 See information about the program powering this group -- chatlist.
