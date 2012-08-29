@@ -127,7 +127,7 @@ def trigger(xmpp, msg):
             if len(s)>1:
                 s=s[1:]
             else:
-                s=_('Error: No help message for %s.' % cmd[1])
+                s=_('Error: No help message for %s.') % cmd[1]
             msg.reply(s).send()
             return
 
