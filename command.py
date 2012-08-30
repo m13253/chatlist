@@ -426,7 +426,7 @@ def trigger(xmpp, msg):
                             s+='\n'+_('Quieted until %s.') % time.ctime(misc.data['stop'][i])
                     to_resources=xmpp.client_roster[i].resources
                     if to_resources:
-                        s+='\nOnline resources:'
+                        s+='\n'+_('Online resources:')
                         for j in to_resources:
                             s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
                             if to_resources[j]['status']:

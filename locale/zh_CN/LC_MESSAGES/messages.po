@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-30 12:38+0800\n"
+"POT-Creation-Date: 2012-08-30 15:25+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "键入 /-help 以寻求更多帮助。"
 msgid "%s has joined this group."
 msgstr "%s 已加入本群。"
 
-#: chatlist.py:76 command.py:193
+#: chatlist.py:76 command.py:194
 #, python-format
 msgid "%s has quited this group."
 msgstr "%s 已退出本群。"
@@ -50,162 +50,203 @@ msgstr "您还没有加入本群。"
 msgid "Your message is too long, please consider using a pastebin."
 msgstr "您的消息过长，请考虑使用 pastebin。"
 
-#: command.py:82
+#: command.py:83
 msgid "Error: /-eval takes arguments"
 msgstr "错误：/-eval 需要参数。"
 
-#: command.py:84 command.py:95 command.py:105 command.py:375
+#: command.py:85 command.py:96 command.py:106 command.py:437
 msgid "Error: Unknown command. For help, type /-help"
 msgstr "错误：未知命令。键入 /-help 以寻求帮助。"
 
-#: command.py:91
+#: command.py:92
 msgid "Command executed."
 msgstr "命令已执行。"
 
-#: command.py:93
+#: command.py:94
 msgid "Error: /-exec takes arguments"
 msgstr "错误：/-exec 需要参数。"
 
-#: command.py:103
+#: command.py:104
 msgid "Error: /-system takes arguments"
 msgstr "错误：/-system 需要参数。"
 
-#: command.py:123
+#: command.py:124
 msgid "DM"
 msgstr "私信"
 
-#: command.py:124
+#: command.py:125
 msgid "Your message has been sent."
 msgstr "您的消息已送出。"
 
-#: command.py:126 command.py:278 command.py:298
+#: command.py:127 command.py:279 command.py:299
 #, python-format
 msgid "Error: User %s is not a member of this group."
 msgstr "错误：用户 %s 不是本群的成员。"
 
-#: command.py:128 command.py:307
+#: command.py:129 command.py:308
 msgid "Error: /-setnick takes exactly two arguments."
 msgstr "错误：/-setnick 需要恰好两个参数。"
 
-#: command.py:148
+#: command.py:149
 #, python-format
 msgid "Error: No help message for %s."
 msgstr "错误：没有 %s 的帮助消息。"
 
-#: command.py:163 command.py:165
+#: command.py:164 command.py:166
 #, python-format
 msgid "INIT: Switching to runlevel: %s"
 msgstr "INIT：切换到运行级别：%s"
 
-#: command.py:175
+#: command.py:176
 msgid "Error: /-init must be run as PID 1."
 msgstr "错误：/-init 必须以 PID 1 执行。"
 
-#: command.py:178
+#: command.py:179
 msgid "Error: /-init takes exactly one argument."
 msgstr "错误：/-init 需要恰好一个参数。"
 
-#: command.py:182
+#: command.py:183
 msgid "You have quited this group."
 msgstr "您已退出本群。"
 
-#: command.py:216
+#: command.py:217
 msgid "Error: Invalid time specification."
 msgstr "错误：时间指定无效。"
 
-#: command.py:221
+#: command.py:222
 msgid "You will never receive messages."
 msgstr "您将永远停止接受消息。"
 
-#: command.py:223
+#: command.py:224
 #, python-format
 msgid "You will not receive messages until %s."
 msgstr "您在 %s 之前将不接受消息。"
 
-#: command.py:225
+#: command.py:226
 msgid "You are currently receiving messages."
 msgstr "您当前正接受消息。"
 
-#: command.py:246
+#: command.py:247
 msgid "Restarting."
 msgstr "正在重新启动。"
 
-#: command.py:248
+#: command.py:249
 #, python-format
 msgid "Restarting by %s."
 msgstr "正在被 %s 重新启动。"
 
-#: command.py:250
+#: command.py:251
 msgid "Shutting down."
 msgstr "正在关闭。"
 
-#: command.py:252
+#: command.py:253
 #, python-format
 msgid "Shutting down by %s."
 msgstr "正在被 %s 关闭。"
 
-#: command.py:255 command.py:280 command.py:304
+#: command.py:256 command.py:281 command.py:305
 msgid "Error: Permission denied."
 msgstr "错误：权限不够。"
 
-#: command.py:264
+#: command.py:265
 #, python-format
 msgid "You have been kicked by %s."
 msgstr "你已被 %s 踢出。"
 
-#: command.py:275
+#: command.py:276
 #, python-format
 msgid "%s has been kicked by %s."
 msgstr "%s 已被 %s 踢出。"
 
-#: command.py:289 command.py:318
+#: command.py:290 command.py:319
 #, python-format
 msgid "Nickname %s not vaild."
 msgstr "昵称 %s 无效。"
 
-#: command.py:291 command.py:320
+#: command.py:292 command.py:321
 #, python-format
 msgid "Nickname %s is already in use."
 msgstr "昵称 %s 已被使用。"
 
-#: command.py:296
+#: command.py:297
 #, python-format
 msgid "%s is forced to changed its nick to %s."
 msgstr "%s 已被迫改名为 %s。"
 
-#: command.py:312
+#: command.py:313
 #, python-format
 msgid "Your current nickname is %s."
 msgstr "您当前的昵称是 %s。"
 
-#: command.py:325
+#: command.py:326
 #, python-format
 msgid "%s changed its nick to %s."
 msgstr "%s 已改名为 %s。"
 
-#: command.py:327
+#: command.py:328
 msgid "Error: /-nick takes exactly one argument."
 msgstr "错误：/-nick 需要恰好一个参数。"
 
-#: command.py:350
+#: command.py:366
 msgid "<Stopped>"
 msgstr "<停止>"
 
-#: command.py:364 misc.py:225
+#: command.py:380 misc.py:231
 msgid "unavailable"
 msgstr "离线"
 
-#: command.py:368
+#: command.py:384
 #, python-format
 msgid "Total %d"
 msgstr "总计 %d"
 
-#: command.py:380
+#: command.py:400
+msgid "Error: /-whois takes at least one argument."
+msgstr "错误：/-whois 需要至少一个参数。"
+
+#: command.py:412
+#, python-format
+msgid "Nickname:\t%s"
+msgstr "昵称：\t%s"
+
+#: command.py:414
+#, python-format
+msgid "Jabber ID:\t%s"
+msgstr "JID：\t%s"
+
+#: command.py:416
+#, python-format
+msgid "Jabber ID:\t%s@%s"
+msgstr "JID：\t%s@%s"
+
+#: command.py:419
+msgid "Not receiving messages."
+msgstr "不接受消息。"
+
+#: command.py:421
+#, python-format
+msgid "Not receiving messages until %s."
+msgstr "在 %s 之前不接受消息。"
+
+#: command.py:424
+msgid "Quieted."
+msgstr "被禁言。"
+
+#: command.py:426
+#, python-format
+msgid "Quieted until %s."
+msgstr "被禁言到 %s。"
+
+#: command.py:429
+msgid "Online resources:"
+msgstr "在线资源："
+
+#: command.py:442
 #, python-format
 msgid "An error occured: %s: %s"
 msgstr "发生了一个错误：%s: %s"
 
-#: command.py:387
+#: command.py:449
 msgid ""
 "\n"
 "Common commands:\n"
@@ -230,7 +271,7 @@ msgstr ""
 "\t/-about\t查看为本群提供动力的程序——chatlist 的信息。\n"
 "键入 /-help 后跟命令名称，以查看该命令的帮助。\n"
 
-#: command.py:398
+#: command.py:460
 msgid ""
 "\n"
 "Administrative commands:\n"
@@ -246,7 +287,7 @@ msgstr ""
 "\t/-setnick\t更改他人的昵称。\n"
 "键入 /-help danger 查看更多。\n"
 
-#: command.py:405
+#: command.py:467
 msgid ""
 "\n"
 "Danger zone:\n"
@@ -262,7 +303,7 @@ msgstr ""
 "\t/-system\t执行一个系统命令。\n"
 "*谨慎使用这些命令！*\n"
 
-#: command.py:412
+#: command.py:474
 msgid ""
 "\n"
 "This group is powered by chatlist,\n"
@@ -279,7 +320,7 @@ msgstr ""
 "\n"
 "访问项目仓库： https:////github.com//m13253//chatlist\n"
 
-#: command.py:420
+#: command.py:482
 msgid ""
 "\n"
 "See information about the program powering this group -- chatlist.\n"
@@ -291,7 +332,7 @@ msgstr ""
 "\n"
 "用法：/-about\n"
 
-#: command.py:425
+#: command.py:487
 msgid ""
 "\n"
 "List users, by default, list only online users.\n"
@@ -311,7 +352,7 @@ msgstr ""
 "\n"
 "别名：/-la /-ll /-lla /-lal\n"
 
-#: command.py:434
+#: command.py:496
 msgid ""
 "\n"
 "Change nickname or get current nickname.\n"
@@ -333,7 +374,7 @@ msgstr ""
 "\n"
 "别名：/-nickname /-alias\n"
 
-#: command.py:444
+#: command.py:506
 msgid ""
 "\n"
 "Change nickname of another user.\n"
@@ -349,7 +390,7 @@ msgstr ""
 "\n"
 "别名：/-mv /-move /-ren /-rename\n"
 
-#: command.py:451
+#: command.py:513
 msgid ""
 "\n"
 "Shutdown this group program.\n"
@@ -369,7 +410,7 @@ msgstr ""
 "\n"
 "别名：/-halt /-restart /-poweroff /-reboot\n"
 
-#: command.py:460
+#: command.py:522
 msgid ""
 "\n"
 "Process control initialization\n"
@@ -383,7 +424,7 @@ msgstr ""
 "\n"
 "用法：/-init [123456S]\n"
 
-#: command.py:466
+#: command.py:528
 msgid ""
 "\n"
 "See help contents of a specific command.\n"
@@ -399,22 +440,22 @@ msgstr ""
 "\n"
 "别名：/-man /-info\n"
 
-#: misc.py:215
+#: misc.py:221
 msgid "available"
 msgstr "在线"
 
-#: misc.py:217
+#: misc.py:223
 msgid "want chat"
 msgstr "求聊天"
 
-#: misc.py:219
+#: misc.py:225
 msgid "do not disturb"
 msgstr "请勿打扰"
 
-#: misc.py:221
+#: misc.py:227
 msgid "away"
 msgstr "离开"
 
-#: misc.py:223
+#: misc.py:229
 msgid "extended away"
 msgstr "远远离开"
