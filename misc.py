@@ -2,6 +2,7 @@
 
 import errno
 import gettext
+import locale
 import os
 import pickle
 import sleekxmpp
@@ -12,6 +13,9 @@ import re
 import config
 
 gettext.install('messages', 'locale')
+locale.setlocale(locale.LC_TIME, '')
+
+lctime = lambda t: time.strftime('%c %Z', time.localtime(t))
 
 restarting = False
 quiting = False

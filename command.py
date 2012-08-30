@@ -233,7 +233,7 @@ def trigger(xmpp, msg):
                 if to_time==None:
                     msg.reply(_('You will never receive messages.')).send()
                 else:
-                    msg.reply(_('You will not receive messages until %s.') % time.ctime(to_time)).send()
+                    msg.reply(_('You will not receive messages until %s.') % misc.lctime(to_time)).send()
             else:
                 msg.reply(_('You are currently receiving messages.')).send()
             return
@@ -344,14 +344,14 @@ def trigger(xmpp, msg):
                     elif to_time=='off':
                         xmpp.send_message(mto=to_jid, mbody=_('You have been stopped quieting by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
                     else:
-                        xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s until %s.') % (misc.getnick(xmpp, from_jid), time.ctime(to_time)), mtype='chat')
+                        xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s until %s.') % (misc.getnick(xmpp, from_jid), misc.lctime(to_time)), mtype='chat')
                     to_nick = misc.getnick(xmpp, to_jid)
                     if to_time==None:
                         xmpp.send_except(to_jid, _('%s has been quieted by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
                     elif to_time=='off':
                         xmpp.send_except(to_jid, _('%s has been stopped quieting by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
                     else:
-                        xmpp.send_except(to_jid, _('%s has been quieted by %s until %s.') % (to_nick, misc.getnick(xmpp, from_jid), time.ctime(to_time)))
+                        xmpp.send_except(to_jid, _('%s has been quieted by %s until %s.') % (to_nick, misc.getnick(xmpp, from_jid), misc.lctime(to_time)))
                     sys.stderr.write('\n')
                 if not success:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
@@ -470,12 +470,12 @@ def trigger(xmpp, msg):
                     if misc.data['stop'][i]==None:
                         s+='\n'+_('Not receiving messages.')
                     else:
-                        s+='\n'+_('Not receiving messages until %s.') % time.ctime(misc.data['stop'][i])
+                        s+='\n'+_('Not receiving messages until %s.') % misc.lctime(misc.data['stop'][i])
                 if not misc.check_time(misc.data['quiet'], i):
                     if misc.data['quiet'][i]==None:
                         s+='\n'+_('Quieted.')
                     else:
-                        s+='\n'+_('Quieted until %s.') % time.ctime(misc.data['quiet'][i])
+                        s+='\n'+_('Quieted until %s.') % misc.lctime(misc.data['quiet'][i])
                 to_resources=xmpp.client_roster[i].resources
                 if to_resources:
                     s+='\n'+_('Online resources:')
