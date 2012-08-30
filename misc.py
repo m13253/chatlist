@@ -225,4 +225,18 @@ def get_status_name(s):
     else:
         return s
 
+def check_time(from_dict, to_jid):
+    if to_jid in from_dict:
+        if from_dict[to_jid]==None:
+            return False
+        else:
+            if from_dict[to_jid]>time.time():
+                return False
+            else:
+                del from_dict[to_jid]
+                save_data()
+                return True
+    else:
+        return True
+
 # vim: et ft=python sts=4 sw=4 ts=4

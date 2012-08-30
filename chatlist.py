@@ -65,6 +65,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         from_jid=sleekxmpp.JID(presence['from']).bare
         if from_jid in misc.data['stop'][from_jid]:
             del misc.data['stop'][from_jid]
+            misc.save_data()
         from_nick=misc.getnick(self, from_jid)
         try:
             self.del_roster_item(from_jid)
@@ -114,12 +115,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         sys.stderr.write('%s: %s\n' % (except_jid, body))
         nowtime=time.time()
         for i in self.client_roster:
-            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
-                if i in misc.data['stop']:
-                    if misc.data['stop'][i]>nowtime:
-                        continue
-                    else:
-                        del misc.data['stop'][i]
+            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(misc.data['stop'], i):
                 try:
                     sys.stderr.write('Sending to %s.' % i)
                     self.send_message(mto=i, mbody=body, mtype='chat')

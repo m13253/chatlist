@@ -165,6 +165,7 @@ def trigger(xmpp, msg):
             msg.reply(_('You have quited this group.')).send()
             if from_jid in misc.data['stop']:
                 del misc.data['stop'][from_jid]
+                misc.save_data()
             to_nick=misc.getnick(xmpp, from_jid)
             misc.del_nicktable(xmpp, from_jid)
             try:
@@ -246,6 +247,7 @@ def trigger(xmpp, msg):
                         xmpp.send_message(mto=to_jid, mbody=_('You have been kicked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
                         if to_jid in misc.data['stop']:
                             del misc.data['stop'][to_jid]
+                            misc.save_data()
                         to_nick = misc.getnick(xmpp, to_jid)
                         misc.del_nicktable(xmpp, to_jid)
                         try:
@@ -348,6 +350,9 @@ def trigger(xmpp, msg):
                                 s+='\t(%s)' % i
             s+='\n'+(_('Total %d') % user_count)
             msg.reply(s).send()
+            return
+
+        if cmd[0]=='whois':
             return
 
         msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
