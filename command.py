@@ -350,8 +350,13 @@ def trigger(xmpp, msg):
             user_count=0
             for i in xmpp.client_roster:
                 if xmpp.client_roster[i]['to']:
-                    if glob and not glob.match(misc.getnick(xmpp, i)) and ((not isAdmin and haveglob) or glob.match(i)):
-                        continue
+                    if glob:
+                        if isAdmin or not haveglob:
+                            if not (glob.match(misc.getnick(xmpp, i)) or glob.match(i)):
+                                continue
+                        else:
+                            if not glob.match(misc.getnick(xmpp, i)):
+                                continue
                     to_resources=xmpp.client_roster[i].resources
                     if option_a or to_resources:
                         user_count+=1
@@ -397,8 +402,13 @@ def trigger(xmpp, msg):
             s=''
             for i in xmpp.client_roster:
                 if xmpp.client_roster[i]['to']:
-                    if not glob.match(misc.getnick(xmpp, i)) and ((not isAdmin and haveglob) or glob.match(i)):
-                        continue
+                    if glob:
+                        if isAdmin or not haveglob:
+                            if not (glob.match(misc.getnick(xmpp, i)) or glob.match(i)):
+                                continue
+                        else:
+                            if not glob.match(misc.getnick(xmpp, i)):
+                                continue
                     s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
                     if isAdmin:
                         s+='\n'+_('Jabber ID:\t%s') % i
@@ -418,7 +428,7 @@ def trigger(xmpp, msg):
                         for j in to_resources:
                             s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
                             if to_resources[j]['status']:
-                                s+='\n[%s]' % to_resources[j]['status']
+                                s+='\t[%s]' % to_resources[j]['status']
             msg.reply(s[1:]).send()
             return
 
