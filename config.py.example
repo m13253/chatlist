@@ -11,4 +11,7 @@ command_prefix = '-/)' # A message starting with one of these characters will tr
 # '/-' will be replaced by command_prefix[0], for '/', type '//'
 welcome_message = 'Welcome to join this group!'
 
+logsize = 500 # Messages are temporarily stored in log so that you can use -old
+cmdlogsize = 200 # Commands are temporarily stored here.
+
 # vim: et ft=python sts=4 sw=4 ts=4

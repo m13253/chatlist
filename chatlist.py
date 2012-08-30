@@ -117,6 +117,9 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 
     def send_except(self, except_jid, body):
         nowtime=time.time()
+        misc.msg_log.append((nowtime, body))
+        if len(misc.msg_log)>config.logsize:
+            misc.msg_log=misc.msg_log[:-config.logsize]
         for i in self.client_roster:
             if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(misc.data['stop'], i):
                 try:

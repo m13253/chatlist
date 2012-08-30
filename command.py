@@ -75,6 +75,27 @@ def trigger(xmpp, msg):
             cmd.insert(1, cmd[0][4:])
             cmd[0]='init'
 
+        if cmd[0]=='say':
+            if misc.check_time(misc.data['quiet'], from_jid):
+                for l in msg['body'].split(None, 1)[1].splitlines():
+                    xmpp.dispatch_message(from_jid, l)
+            else:
+                msg.reply(_('You have been quieted.')).send()
+            return
+
+        if cmd[0]=='me':
+            if misc.check_time(misc.data['quiet'], from_jid):
+                from_nick=misc.getnick(xmpp, from_jid)
+                for l in msg['body'].split(None, 1)[1].splitlines():
+                    xmpp.send_except(None, '* %s %s' % (from_nick, l))
+            else:
+                msg.reply(_('You have been quieted.')).send()
+            return
+
+        misc.cmd_log.append((time.time(), '%s: %s' % (from_jid, msg['body'])))
+        if len(misc.cmd_log)>config.cmdlogsize:
+            misc.cmd_log=misc.cmd_log[:-config.cmdlogsize]
+
         if cmd[0]=='eval':
             if from_jid in config.root:
                 if len(cmd)>1:
@@ -110,23 +131,6 @@ def trigger(xmpp, msg):
                 msg.reply(_('Error: Permission denied.')).send()
             else:
                 msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
-            return
-
-        if cmd[0]=='say':
-            if misc.check_time(misc.data['quiet'], from_jid):
-                for l in msg['body'].split(None, 1)[1].splitlines():
-                    xmpp.dispatch_message(from_jid, l)
-            else:
-                msg.reply(_('You have been quieted.')).send()
-            return
-
-        if cmd[0]=='me':
-            if misc.check_time(misc.data['quiet'], from_jid):
-                from_nick=misc.getnick(xmpp, from_jid)
-                for l in msg['body'].split(None, 1)[1].splitlines():
-                    xmpp.send_except(None, '* %s %s' % (from_nick, l))
-            else:
-                msg.reply(_('You have been quieted.')).send()
             return
 
         if cmd[0]=='msg':
