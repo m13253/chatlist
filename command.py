@@ -37,7 +37,7 @@ def trigger(xmpp, msg):
         elif cmd[0] in ('stat', 'whowas', 'dig', 'nslookup'):
             cmd[0]='whois'
         elif cmd[0] in ('iam', 'whoami'):
-            cmd[0]=['whois', from_jid]
+            cmd=['whois', from_jid]
         elif cmd[0] in ('pm', 'dm', 'query', 'tell'):
             cmd[0]='msg'
         elif cmd[0] in ('test', 'traceroute', 'tracert', 'pong'):
