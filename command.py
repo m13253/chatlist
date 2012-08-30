@@ -76,32 +76,38 @@ def trigger(xmpp, msg):
             cmd[0]='init'
 
         if cmd[0]=='eval':
-            if from_jid in config.admins:
+            if from_jid in config.root:
                 if len(cmd)>1:
                     msg.reply(str(eval(msg['body'].split(None, 1)[1]))).send()
                 else:
                     msg.reply(misc.replace_prefix(_('Error: /-eval takes arguments'), prefix)).send()
+            elif from_jid in config.admins:
+                msg.reply(_('Error: Permission denied.')).send()
             else:
                 msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
             return
 
         if cmd[0]=='exec':
-            if from_jid in config.admins:
+            if from_jid in config.root:
                 if len(cmd)>1:
                     exec(msg['body'].split(None, 1)[1])
                     msg.reply(_('Command executed.')).send()
                 else:
                     msg.reply(misc.replace_prefix(_('Error: /-exec takes arguments'), prefix)).send()
+            elif from_jid in config.admins:
+                msg.reply(_('Error: Permission denied.')).send()
             else:
                 msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
             return
 
         if cmd[0]=='system':
-            if from_jid in config.admins:
+            if from_jid in config.root:
                 if len(cmd)>1:
                     msg.reply('\n'+subprocess.getoutput(msg['body'].split(None, 1)[1])).send()
                 else:
                     msg.reply(misc.replace_prefix(_('Error: /-system takes arguments'), prefix)).send()
+            elif from_jid in config.admins:
+                msg.reply(_('Error: Permission denied.')).send()
             else:
                 msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
             return

@@ -131,6 +131,9 @@ if __name__=='__main__':
     for i in ('stop', 'quiet'):
         if i not in misc.data:
             misc.data[i]={}
+    for i in config.root:
+        if i not in config.admins:
+            config.admins.append(i)
     try:
         try:
             xmpp=XMPPBot(config.JID, config.password)
