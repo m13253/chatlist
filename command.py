@@ -412,6 +412,8 @@ def trigger(xmpp, msg):
                     s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
                     if isAdmin:
                         s+='\n'+_('Jabber ID:\t%s') % i
+                    else:
+                        s+='\n'+_('Jabber ID:\t%s@%s') % ('*'*len(sleekxmpp.JID(i).user), sleekxmpp.JID(i).domain)
                     if i in misc.data['stop']:
                         if misc.data['stop'][i]==None:
                             s+='\n'+_('Not receiving messages.')
