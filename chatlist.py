@@ -85,6 +85,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             body=msg['body']
             if not body:
                 return
+            sys.stderr.write('%s:\t%s\n' % (from_jid, body))
             if from_jid not in self.client_roster or self.client_roster[from_jid]['subscription']!='both':
                 if self.client_roster[from_jid]['subscription']=='from':
                     msg.reply(_('You have not accept the buddy request.')).send()
@@ -115,14 +116,11 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
 
     def send_except(self, except_jid, body):
-        sys.stderr.write('%s: %s\n' % (except_jid, body))
         nowtime=time.time()
         for i in self.client_roster:
             if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(misc.data['stop'], i):
                 try:
-                    sys.stderr.write('Sending to %s.' % i)
                     self.send_message(mto=i, mbody=body, mtype='chat')
-                    sys.stderr.write('\n')
                 except:
                     pass
 
