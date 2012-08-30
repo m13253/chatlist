@@ -99,6 +99,9 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             else:
                 if from_jid in misc.data['stop']:
                     del misc.data['stop'][from_jid]
+                if not misc.check_time(misc.data['quiet'], from_jid):
+                    msg.reply(_('You have been quieted.')).send()
+                    return
                 for l in body.splitlines():
                     self.dispatch_message(from_jid, l)
         except UnicodeError:

@@ -107,14 +107,20 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='say':
-            for l in msg['body'].split(None, 1)[1].splitlines():
-                xmpp.dispatch_message(from_jid, l)
+            if misc.check_time(config.data['quiet'], from_jid):
+                for l in msg['body'].split(None, 1)[1].splitlines():
+                    xmpp.dispatch_message(from_jid, l)
+            else:
+                msg.reply(_('You have been quieted.')).send()
             return
 
         if cmd[0]=='me':
-            from_nick=misc.getnick(xmpp, from_jid)
-            for l in msg['body'].split(None, 1)[1].splitlines():
-                xmpp.send_except(None, '* %s %s' % (from_nick, l))
+            if misc.check_time(config.data['quiet'], from_jid):
+                from_nick=misc.getnick(xmpp, from_jid)
+                for l in msg['body'].split(None, 1)[1].splitlines():
+                    xmpp.send_except(None, '* %s %s' % (from_nick, l))
+            else:
+                msg.reply(_('You have been quieted.')).send()
             return
 
         if cmd[0]=='msg':
@@ -258,25 +264,91 @@ def trigger(xmpp, msg):
 
         if cmd[0]=='kick':
             if from_jid in config.admins:
-                for i in cmd[1:]:
-                    to_jid=misc.getjid(xmpp, i)
-                    if to_jid:
-                        sys.stderr.write('Kicking %s' % to_jid)
-                        xmpp.send_message(mto=to_jid, mbody=_('You have been kicked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
-                        if to_jid in misc.data['stop']:
-                            del misc.data['stop'][to_jid]
-                            misc.save_data()
-                        to_nick = misc.getnick(xmpp, to_jid)
-                        misc.del_nicktable(xmpp, to_jid)
-                        try:
-                            xmpp.del_roster_item(to_jid)
-                            xmpp.client_roster.remove(to_jid)
-                        except:
-                            pass
-                        xmpp.send_except(to_jid, _('%s has been kicked by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
-                        sys.stderr.write('\n')
+                if len(cmd)<=1:
+                    msg.reply(misc.replace_prefix(_('Error: /-kick takes at least one argument.'), prefix)).send()
+                    return
+                if len(cmd)>2:
+                    reason=msg['body'].split(None, 2)[2]
+                else:
+                    reason=None
+                success=False
+                for to_jid in misc.find_users(xmpp, cmd[1], True):
+                    success=True
+                    sys.stderr.write('Kicking %s.' % to_jid)
+                    if reason:
+                        xmpp.send_message(mto=to_jid, mbody=_('You have been kicked by %s. (%s)') % (misc.getnick(xmpp, from_jid), reason), mtype='chat')
                     else:
-                        msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+                        xmpp.send_message(mto=to_jid, mbody=_('You have been kicked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                    if to_jid in misc.data['stop']:
+                        del misc.data['stop'][to_jid]
+                        misc.save_data()
+                    to_nick = misc.getnick(xmpp, to_jid)
+                    misc.del_nicktable(xmpp, to_jid)
+                    try:
+                        xmpp.del_roster_item(to_jid)
+                        xmpp.client_roster.remove(to_jid)
+                    except:
+                        pass
+                    if reason:
+                        xmpp.send_except(to_jid, _('%s has been kicked by %s. (%s)') % (to_nick, misc.getnick(xmpp, from_jid), reason))
+                    else:
+                        xmpp.send_except(to_jid, _('%s has been kicked by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
+                    sys.stderr.write('\n')
+                if not success:
+                    msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+            else:
+                msg.reply(_('Error: Permission denied.')).send()
+            return
+
+        if cmd[0]=='quiet':
+            if from_jid in config.admins:
+                if len(cmd)<=1:
+                    msg.reply(misc.replace_prefix(_('Error: /-quiet takes at least one argument.'), prefix)).send()
+                    return
+                if len(cmd)>2:
+                    to_time=''.join(cmd[2:])
+                else:
+                    to_time=None
+                try:
+                    if to_time in ('ever', 'forever', None):
+                        to_time=None
+                    elif to_time in ('off', 'never'):
+                        to_time='off'
+                    else:
+                        to_time=misc.TimeUnit(to_time)
+                        if to_time>0:
+                            to_time=time.time()+misc.TimeUnit(to_time)
+                        else:
+                            to_time='off'
+                except ValueError:
+                        msg.reply(_('Error: Invalid time specification.')).send()
+                        return
+                success=False
+                for to_jid in misc.find_users(xmpp, cmd[1], True):
+                    success=True
+                    sys.stderr.write('Quieting %s.' % to_jid)
+                    if to_time!='off':
+                        misc.data['quiet'][to_jid]=to_time
+                    else:
+                        if to_jid in misc.data['quiet']:
+                            del misc.data['quiet'][to_jid]
+                    misc.save_data()
+                    if to_time==None:
+                        xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                    elif to_time=='off':
+                        xmpp.send_message(mto=to_jid, mbody=_('You have been stopped quieting by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                    else:
+                        xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s until %s.') % (misc.getnick(xmpp, from_jid), time.ctime(to_time)), mtype='chat')
+                    to_nick = misc.getnick(xmpp, to_jid)
+                    if to_time==None:
+                        xmpp.send_except(to_jid, _('%s has been quieted by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
+                    elif to_time=='off':
+                        xmpp.send_except(to_jid, _('%s has been stopped quieting by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
+                    else:
+                        xmpp.send_except(to_jid, _('%s has been quieted by %s until %s.') % (to_nick, misc.getnick(xmpp, from_jid), time.ctime(to_time)))
+                    sys.stderr.write('\n')
+                if not success:
+                    msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
                 msg.reply(_('Error: Permission denied.')).send()
             return
@@ -332,7 +404,6 @@ def trigger(xmpp, msg):
             isAdmin = from_jid in config.admins
             option_a = False
             option_l = False
-            haveglob = False
             glob = []
             for i in cmd[1:]:
                 if i.startswith('-'):
@@ -341,96 +412,71 @@ def trigger(xmpp, msg):
                     if 'l' in i:
                         option_l = True
                 else:
-                    if '?' in i or '*' in i:
-                        haveglob = True
                     glob.append(i)
-            if glob:
-                glob=re.compile(misc.replace_globs_to_regex(glob))
             s=''
             user_count=0
-            for i in xmpp.client_roster:
-                if xmpp.client_roster[i]['to']:
-                    if glob:
-                        if isAdmin or not haveglob:
-                            if not (glob.match(misc.getnick(xmpp, i)) or glob.match(i)):
-                                continue
+            for i in misc.find_users(xmpp, glob, isAdmin):
+                to_resources=xmpp.client_roster[i].resources
+                if option_a or to_resources:
+                    user_count+=1
+                    s+='\n\t%s' % misc.getnick(xmpp, i)
+                    if option_l:
+                        if not misc.check_time(misc.data['stop'], i):
+                            s+='\t'+_('<Stopped>')
+                        if to_resources:
+                            to_priority=-1
+                            to_show=''
+                            to_status='unavailable'
+                            for j in to_resources:
+                                if to_resources[j]['priority']>to_priority or (to_resources[j]['priority']==to_priority and misc.compare_status(to_resources[j]['show'], to_status)>=0):
+                                    to_priority=to_resources[j]['priority']
+                                    to_show=to_resources[j]['show']
+                                    to_status=to_resources[j]['status']
+                            s+='\t(%s)' % misc.get_status_name(to_show)
+                            if to_status:
+                                s+=' [%s]' % to_status
                         else:
-                            if not glob.match(misc.getnick(xmpp, i)):
-                                continue
-                    to_resources=xmpp.client_roster[i].resources
-                    if option_a or to_resources:
-                        user_count+=1
-                        s+='\n\t%s' % misc.getnick(xmpp, i)
-                        if option_l:
-                            if i in misc.data['stop']:
-                                s+='\t'+_('<Stopped>')
-                            if to_resources:
-                                to_priority=-1
-                                to_show=''
-                                to_status='unavailable'
-                                for j in to_resources:
-                                    if to_resources[j]['priority']>to_priority or (to_resources[j]['priority']==to_priority and misc.compare_status(to_resources[j]['show'], to_status)>=0):
-                                        to_priority=to_resources[j]['priority']
-                                        to_show=to_resources[j]['show']
-                                        to_status=to_resources[j]['status']
-                                s+='\t(%s)' % misc.get_status_name(to_show)
-                                if to_status:
-                                    s+=' [%s]' % to_status
-                            else:
-                                s+='\t(%s)' % _('unavailable')
-                        else:
-                            if isAdmin:
-                                s+='\t(%s)' % i
+                            s+='\t(%s)' % _('unavailable')
+                    else:
+                        if isAdmin:
+                            s+='\t(%s)' % i
             s+='\n'+(_('Total %d') % user_count)
             msg.reply(s).send()
             return
 
         if cmd[0]=='whois':
             isAdmin = from_jid in config.admins
-            haveglob = False
             glob=[]
             for i in cmd[1:]:
                 if not i.startswith('-'):
-                    if '?' in i or '*' in i:
-                        haveglob = True
                     glob.append(i)
-            if glob:
-                glob=re.compile(misc.replace_globs_to_regex(glob))
-            else:
+            if not glob:
                 msg.reply(misc.replace_prefix(_('Error: /-whois takes at least one argument.'), prefix)).send()
                 return
             s=''
-            for i in xmpp.client_roster:
-                if xmpp.client_roster[i]['to']:
-                    if glob:
-                        if isAdmin or not haveglob:
-                            if not (glob.match(misc.getnick(xmpp, i)) or glob.match(i)):
-                                continue
-                        else:
-                            if not glob.match(misc.getnick(xmpp, i)):
-                                continue
-                    s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
-                    if isAdmin:
-                        s+='\n'+_('Jabber ID:\t%s') % i
+            for i in misc.find_users(xmpp, glob, isAdmin):
+                s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
+                if isAdmin:
+                    s+='\n'+_('Jabber ID:\t%s') % i
+                else:
+                    s+='\n'+_('Jabber ID:\t%s@%s') % ('*'*len(sleekxmpp.JID(i).user), sleekxmpp.JID(i).domain)
+                if not misc.check_time(misc.data['stop'], i):
+                    if misc.data['stop'][i]==None:
+                        s+='\n'+_('Not receiving messages.')
                     else:
-                        s+='\n'+_('Jabber ID:\t%s@%s') % ('*'*len(sleekxmpp.JID(i).user), sleekxmpp.JID(i).domain)
-                    if i in misc.data['stop']:
-                        if misc.data['stop'][i]==None:
-                            s+='\n'+_('Not receiving messages.')
-                        else:
-                            s+='\n'+_('Not receiving messages until %s.') % time.ctime(misc.data['stop'][i])
-                    if i in misc.data['quiet']:
-                        if misc.data['quiet'][i]==None:
-                            s+='\n'+_('Quieted.')
-                        else:
-                            s+='\n'+_('Quieted until %s.') % time.ctime(misc.data['stop'][i])
-                    to_resources=xmpp.client_roster[i].resources
-                    if to_resources:
-                        s+='\n'+_('Online resources:')
-                        for j in to_resources:
-                            s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
-                            if to_resources[j]['status']:
-                                s+='\t[%s]' % to_resources[j]['status']
+                        s+='\n'+_('Not receiving messages until %s.') % time.ctime(misc.data['stop'][i])
+                if not misc.check_time(misc.data['quiet'], i):
+                    if misc.data['quiet'][i]==None:
+                        s+='\n'+_('Quieted.')
+                    else:
+                        s+='\n'+_('Quieted until %s.') % time.ctime(misc.data['quiet'][i])
+                to_resources=xmpp.client_roster[i].resources
+                if to_resources:
+                    s+='\n'+_('Online resources:')
+                    for j in to_resources:
+                        s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
+                        if to_resources[j]['status']:
+                            s+='\t[%s]' % to_resources[j]['status']
             msg.reply(s[1:]).send()
             return
 

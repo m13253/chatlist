@@ -6,6 +6,7 @@ import os
 import pickle
 import sleekxmpp
 import sys
+import time
 import re
 
 import config
@@ -94,10 +95,35 @@ def replace_glob_to_regex(glob):
     return '^'+res+'$'
 
 def replace_globs_to_regex(glob):
+    if isinstance(glob, str):
+        return replace_glob_to_regex(glob)
     if len(glob)>0:
         return '^('+'|'.join([replace_glob_to_regex(i)[1:-1] for i in glob])+')$'
     else:
         return '^.*'
+
+def find_users(xmpp, glob, isAdmin):
+    haveglob=False
+    regex=[]
+    for i in glob:
+        if not i or i.startswith('-'):
+            continue
+        regex.append(i)
+        if '?' in i or '*' in i:
+            haveglob=True
+            break
+    regex=re.compile(replace_globs_to_regex(glob))
+    res=[]
+    for i in xmpp.client_roster:
+        if xmpp.client_roster[i]['to'] and xmpp.client_roster[i]['subscription']=='both':
+            if isAdmin or not haveglob:
+                if regex.match(i) or regex.match(getnick(xmpp, i)):
+                    res.append(i)
+            else:
+                if regex.match(getnick(xmpp, i)):
+                    res.append(i)
+    res.sort()
+    return res
 
 data = {}
 
