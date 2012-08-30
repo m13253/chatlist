@@ -91,7 +91,13 @@ def replace_glob_to_regex(glob):
             res+='.'
         else:
             res+=re.escape(i)
-    return res
+    return '^'+res+'$'
+
+def replace_globs_to_regex(glob):
+    if len(glob)>0:
+        return '^('+'|'.join([replace_glob_to_regex(i)[1:-1] for i in glob])+')$'
+    else:
+        return '^.*'
 
 data = {}
 

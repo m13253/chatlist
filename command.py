@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import gettext
+import re
 import sleekxmpp
 import subprocess
 import sys
@@ -331,16 +332,26 @@ def trigger(xmpp, msg):
             isAdmin = from_jid in config.admins
             option_a = False
             option_l = False
+            haveglob = False
+            glob = []
             for i in cmd[1:]:
                 if i.startswith('-'):
                     if 'a' in i:
                         option_a = True
                     if 'l' in i:
                         option_l = True
+                else:
+                    if '?' in i or '*' in i:
+                        haveglob = True
+                    glob.append(i)
+            if glob:
+                glob=re.compile(misc.replace_globs_to_regex(glob))
             s=''
             user_count=0
             for i in xmpp.client_roster:
                 if xmpp.client_roster[i]['to']:
+                    if glob and not glob.match(misc.getnick(xmpp, i)) and ((not isAdmin and haveglob) or glob.match(i)):
+                        continue
                     to_resources=xmpp.client_roster[i].resources
                     if option_a or to_resources:
                         user_count+=1
@@ -370,6 +381,45 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='whois':
+            isAdmin = from_jid in config.admins
+            haveglob = False
+            glob=[]
+            for i in cmd[1:]:
+                if not i.startswith('-'):
+                    if '?' in i or '*' in i:
+                        haveglob = True
+                    glob.append(i)
+            if glob:
+                glob=re.compile(misc.replace_globs_to_regex(glob))
+            else:
+                msg.reply(misc.replace_prefix(_('Error: /-whois takes at least one argument.'), prefix)).send()
+                return
+            s=''
+            for i in xmpp.client_roster:
+                if xmpp.client_roster[i]['to']:
+                    if not glob.match(misc.getnick(xmpp, i)) and ((not isAdmin and haveglob) or glob.match(i)):
+                        continue
+                    s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
+                    if isAdmin:
+                        s+='\n'+_('Jabber ID:\t%s') % i
+                    if i in misc.data['stop']:
+                        if misc.data['stop'][i]==None:
+                            s+='\n'+_('Not receiving messages.')
+                        else:
+                            s+='\n'+_('Not receiving messages until %s.') % time.ctime(misc.data['stop'][i])
+                    if i in misc.data['quiet']:
+                        if misc.data['quiet'][i]==None:
+                            s+='\n'+_('Quieted.')
+                        else:
+                            s+='\n'+_('Quieted until %s.') % time.ctime(misc.data['stop'][i])
+                    to_resources=xmpp.client_roster[i].resources
+                    if to_resources:
+                        s+='\nOnline resources:'
+                        for j in to_resources:
+                            s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
+                            if to_resources[j]['status']:
+                                s+='\n[%s]' % to_resources[j]['status']
+            msg.reply(s[1:]).send()
             return
 
         msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
