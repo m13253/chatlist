@@ -96,6 +96,7 @@ def replace_glob_to_regex(glob):
 data = {}
 
 def load_data(filename=config.datafile):
+    global data
     try:
         f=open(filename, 'rb')
         try:
