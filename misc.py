@@ -20,6 +20,7 @@ lctime = lambda t: time.strftime('%c %Z', time.localtime(t))
 restarting = False
 quiting = False
 nick_table = {}
+msg_log = []
 
 def add_nicktable(xmpp, jid):
     nick_table[getnick(xmpp, jid)] = jid

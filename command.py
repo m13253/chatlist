@@ -113,7 +113,7 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='say':
-            if misc.check_time(config.data['quiet'], from_jid):
+            if misc.check_time(misc.data['quiet'], from_jid):
                 for l in msg['body'].split(None, 1)[1].splitlines():
                     xmpp.dispatch_message(from_jid, l)
             else:
@@ -121,7 +121,7 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='me':
-            if misc.check_time(config.data['quiet'], from_jid):
+            if misc.check_time(misc.data['quiet'], from_jid):
                 from_nick=misc.getnick(xmpp, from_jid)
                 for l in msg['body'].split(None, 1)[1].splitlines():
                     xmpp.send_except(None, '* %s %s' % (from_nick, l))
