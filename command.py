@@ -3,6 +3,7 @@
 import gettext
 import sleekxmpp
 import sys
+import time
 
 import config
 import misc
@@ -162,6 +163,8 @@ def trigger(xmpp, msg):
 
         if cmd[0]=='quit':
             msg.reply(_('You have quited this group.')).send()
+            if from_jid in misc.data['stop']:
+                del misc.data['stop'][from_jid]
             to_nick=misc.getnick(xmpp, from_jid)
             misc.del_nicktable(xmpp, from_jid)
             try:
@@ -170,6 +173,38 @@ def trigger(xmpp, msg):
             except:
                 pass
             xmpp.send_except(_('%s has quited this group.') % to_nick)
+            return
+
+        if cmd[0]=='stop':
+            if len(cmd)>1:
+                to_time=''.join(cmd[1:])
+                try:
+                    if to_time in ('ever', 'forever'):
+                        misc.data['stop'][from_jid]=None
+                        misc.save_data()
+                    elif to_time in ('off', 'never'):
+                        if from_jid in misc.data['stop']:
+                            del misc.data['stop'][from_jid]
+                            misc.save_data()
+                    else:
+                        to_time=misc.TimeUnit(to_time)
+                        if to_time>0:
+                            to_time=time.time()+misc.TimeUnit(to_time)
+                            misc.data['stop'][from_jid]=to_time
+                        elif from_jid in misc.data['stop']:
+                            del misc.data['stop'][from_jid]
+                        misc.save_data()
+                except ValueError:
+                        msg.reply(_('Error: Invalid time specification.')).send()
+                        return
+            if from_jid in misc.data['stop']:
+                to_time=misc.data['stop'][from_jid]
+                if to_time==None:
+                    msg.reply(_('You will never receive messages.')).send()
+                else:
+                    msg.reply(_('You will not receive messages until %s.') % time.ctime(to_time)).send()
+            else:
+                msg.reply(_('You are currently receiving messages.')).send()
             return
 
         if cmd[0]=='ping':
@@ -209,6 +244,8 @@ def trigger(xmpp, msg):
                     if to_jid:
                         sys.stderr.write('Kicking %s' % to_jid)
                         xmpp.send_message(mto=to_jid, mbody=_('You have been kicked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                        if to_jid in misc.data['stop']:
+                            del misc.data['stop'][to_jid]
                         to_nick = misc.getnick(xmpp, to_jid)
                         misc.del_nicktable(xmpp, to_jid)
                         try:
@@ -290,6 +327,8 @@ def trigger(xmpp, msg):
                         user_count+=1
                         s+='\n\t%s' % misc.getnick(xmpp, i)
                         if option_l:
+                            if i in misc.data['stop']:
+                                s+='\t'+_('<Stopped>')
                             if to_resources:
                                 to_priority=-1
                                 to_show=''

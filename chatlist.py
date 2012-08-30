@@ -63,6 +63,8 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 
     def unsubscribe(self, presence):
         from_jid=sleekxmpp.JID(presence['from']).bare
+        if from_jid in misc.data['stop'][from_jid]:
+            del misc.data['stop'][from_jid]
         from_nick=misc.getnick(self, from_jid)
         try:
             self.del_roster_item(from_jid)
@@ -94,6 +96,8 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             if len(body)>1 and body[0] in config.command_prefix:
                 command.trigger(self, msg)
             else:
+                if from_jid in misc.data['stop']:
+                    del misc.data['stop'][from_jid]
                 for l in body.splitlines():
                     self.dispatch_message(from_jid, l)
         except UnicodeError:
@@ -108,8 +112,14 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 
     def send_except(self, except_jid, body):
         sys.stderr.write('%s: %s\n' % (except_jid, body))
+        nowtime=time.time()
         for i in self.client_roster:
             if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
+                if i in misc.data['stop']:
+                    if misc.data['stop'][i]>nowtime:
+                        continue
+                    else:
+                        del misc.data['stop'][i]
                 try:
                     sys.stderr.write('Sending to %s.' % i)
                     self.send_message(mto=i, mbody=body, mtype='chat')
