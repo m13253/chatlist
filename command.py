@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import bisect
 import gettext
 import re
 import sleekxmpp
@@ -65,6 +66,8 @@ def trigger(xmpp, msg):
             cmd=['stop', 'off']
         elif cmd[0]=='off':
             cmd=['stop', 'forever']
+        elif cmd[0]=='log':
+            cmd[0]='old'
         elif cmd[0]=='mute':
             cmd[0]='quiet'
         elif cmd[0] in ('part', 'leave', 'exit', 'bye'):
@@ -208,6 +211,66 @@ def trigger(xmpp, msg):
             except:
                 pass
             xmpp.send_except(_('%s has quited this group.') % to_nick)
+            return
+
+        if cmd[0]=='old':
+            from_log=misc.msg_log
+            arg=[]
+            for i in cmd[1:]:
+                if i.startswith('-'):
+                    if 'a' in i and from_jid in config.admins:
+                        from_log=misc.cmd_log
+                elif i:
+                    arg.append(i)
+            try:
+                if len(arg)>=1:
+                    from_time=arg[0]
+                    if len(arg)>=2:
+                        len_time=arg[1]
+                    else:
+                        len_time=from_time
+                else:
+                    from_time='25'
+                    len_time=from_time
+                if from_time.isdigit():
+                    from_time=int(from_time)
+                else:
+                    from_time=misc.TimeUnit(from_time)
+                if len_time.isdigit():
+                    len_time=int(len_time)
+                else:
+                    len_time=misc.TimeUnit(len_time)
+            except ValueError:
+                msg.reply(_('Error: Invalid time specification.')).send()
+                return
+            res=[]
+            nowtime=time.time()
+            try:
+                if isinstance(from_time, misc.TimeUnit):
+                    res=from_log[bisect.bisect_left(from_log, (nowtime-from_time,)):]
+                    if isinstance(len_time, misc.TimeUnit):
+                        res=res[:bisect.bisect(res, (nowtime-from_time+len_time,))]
+                    else:
+                        res=res[:len_time]
+                else:
+                    res=from_log[-from_time:]
+                    if isinstance(len_time, misc.TimeUnit):
+                        res=res[:bisect.bisect(res, (res[0][0]+len_time,))]
+                    else:
+                        res=res[:len_time]
+                res=res[:100]
+            except IndexError:
+                pass
+                raise
+            if res:
+                sres=''
+                sres+='\n'+_('Start:\t%s') % misc.lctime(res[0][0])
+                for i in res:
+                    sres+='\n(%s) %s' % (time.strftime("%x", time.localtime(i[0])), i[1])
+                sres+='\n'+_('End:\t%s') % misc.lctime(res[-1][0])
+                msg.reply(sres).send()
+            else:
+                msg.reply(_('No messages match your criteria.')).send()
             return
 
         if cmd[0]=='stop':
