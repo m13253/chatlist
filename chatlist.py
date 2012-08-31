@@ -35,7 +35,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 if self.client_roster[i]['subscription']=='both':
                     sys.stderr.write('\t%s' % i)
                     misc.add_nicktable(self, i)
-                    if not (misc.check_time(misc.data['stop'], i) or misc.check_time(misc.data['quiet'], i)):
+                    if not (misc.check_time(self, misc.data['stop'], i) or misc.check_time(misc.data['quiet'], i)):
                         self.send_presence(pto=i, pshow='dnd', pstatus=config.group_topic)
                     sys.stderr.write('\n')
                 elif self.client_roster[i]['subscription']=='to':
@@ -111,7 +111,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 if not misc.check_time(self, misc.data['quiet'], from_jid):
                     msg.reply(_('You have been quieted.')).send()
                     return
-                for msg_filter in msgfilter.msg_filters:
+                for msg_filter in msgfilters.msg_filters:
                     if not msg_filter(self, msg):
                         return
                 for l in body.splitlines():
@@ -138,6 +138,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(self, misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
                 try:
                     self.send_message(mto=i, mbody=body, mtype='chat')
+                    misc.check_time(self, misc.data['quiet'], i)
                 except:
                     pass
 

@@ -291,6 +291,11 @@ def trigger(xmpp, msg):
                         if from_jid in misc.data['stop']:
                             del misc.data['stop'][from_jid]
                             misc.save_data()
+                            try:
+                                if to_jid not in data['stop'] and to_jid not in data['quiet']:
+                                    xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                            except:
+                                pass
                     else:
                         to_time=misc.TimeUnit(to_time)
                         if to_time>0:
@@ -298,6 +303,11 @@ def trigger(xmpp, msg):
                             misc.data['stop'][from_jid]=to_time
                         elif from_jid in misc.data['stop']:
                             del misc.data['stop'][from_jid]
+                            try:
+                                if to_jid not in data['stop'] and to_jid not in data['quiet']:
+                                    xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                            except:
+                                pass
                         misc.save_data()
                 except ValueError:
                         msg.reply(_('Error: Invalid time specification.')).send()
@@ -422,6 +432,11 @@ def trigger(xmpp, msg):
                     else:
                         if to_jid in misc.data['quiet']:
                             del misc.data['quiet'][to_jid]
+                            try:
+                                if to_jid not in data['stop'] and to_jid not in data['quiet']:
+                                    xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                            except:
+                                pass
                     if orig_time==to_time:
                         continue
                     if to_time==None:
