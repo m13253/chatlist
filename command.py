@@ -645,15 +645,20 @@ Common commands:
 \t/-ls\tList online users. Use /-ls -a for all users.
 \t/-nick\tChange nickname or get current nickname.
 \t/-say\tSend a message, usually a message starting with /-
+\t/-msg\tSend a private message.
 \t/-whois\tGet personal information from the specific user.
 \t/-ping\tTest whether you are still online.
+\t/-old\tList message history.
+\t/-stop\tStop receiving message for a specific duration.
+\t/-block\tFilter messages from a specific user, opposite of /-unblock.
 \t/-quit\tQuit this group. Or just delete this group from your buddy list.
 \t/-about\tSee information about the program powering this group -- chatlist.
 For help of a specific command, type command name followed by /-help
 '''),
     ':admin': _('''
 Administrative commands:
-\t/-kick\tKick someoue out of this group.
+\t/-kick\tKick someone out of this group.
+\t/-quiet\tForce someone to be quiet.
 \t/-shutdown\tShutdown this group program. Use /-shutdown -r to restart.
 \t/-setnick\tChange nickname of another user.
 For more, use /-help danger
@@ -681,12 +686,12 @@ Usage: /-about
     'ls': _('''
 List users, by default, list only online users.
 
-Usage: /-ls [-a] [-l]
+Usage: /-ls [-a] [-l] [target ...]
 \t-a\tList all users instead of only online users.
 \t-l\tShow user status.
 
-Alias: /-la /-ll /-lla /-lal
-'''), 'la': '=ls', 'll': '=ls', 'lla': '=ls', '=lal': '=ls',
+Alias: /-la /-ll /-lla /-lal /-online /-users /-names /-list /-dir
+'''), 'la': '=ls', 'll': '=ls', 'lla': '=ls', 'lal': '=ls', 'online': '=ls', 'list': '=la', 'users': '=la', 'names': '=la', 'dir': '=la', 'name': '=names',
     'nick': _('''
 Change nickname or get current nickname.
 
@@ -696,13 +701,13 @@ Nickname must not contain these characters: @ ? *
 Nickname starting with - is also unacceptable.
 
 Alias: /-nickname /-alias
-'''),
+'''), 'alias': '=nick',
     'setnick': _('''
 Change nickname of another user.
 
 Usage: /-setnick <target> <nickname>
 
-Alias: /-mv /-move /-ren /-rename
+Alias: /-mv /-ren
 '''), 'mv': '=setnick', 'move': '=setnick', 'ren': '=setnick', 'rename': '=setnick',
     'shutdown': _('''
 Shutdown this group program.
@@ -711,7 +716,7 @@ Usage: /-shutdown [-r] [-q]
 \t-r\tRestart this program after shutting down.
 \t-q\tQuiet mode. Do not broadcast message when shutting down.
 
-Alias: /-halt /-restart /-poweroff /-reboot
+Alias: /-halt /-restart
 '''), 'halt': '=shutdown', 'restart': '=shutdown', 'poweroff': '=shutdown', 'reboot': '=shutdown',
     'init': _('''
 Process control initialization
@@ -726,7 +731,151 @@ Usage: /-help <command>
 
 Alias: /-man /-info
 '''), 'man': '=help', 'info': '=help',
-# TODO: more help coming soon.
+    'whois': _('''
+Show personal information from the specific user.
+
+Usage: /-whois <target> ...
+
+Alias: /-stat /-dig
+'''), 'stat': '=whois', 'whowas': '=whois', 'dig': '=nslookup', 'nslookup': '=whois',
+    'iam': _('''
+Shortcut for /-whois <nickname of myself>
+
+Usage: /-iam
+
+Alias: /-whoami
+'''), 'whoami': '=iam',
+    'msg': _('''
+Send a private message.
+
+Usage: /-msg <target> <message>
+
+Alias: /-pm /-dm /-query /-tell
+'''), 'pm': '=msg', 'dm': '=pm', 'query': '=msg', 'tell': '=msg',
+    'ping': _('''
+Test whether you are still online.
+
+Usage: /-ping [message]
+
+Alias: /-test
+'''), 'test': '=ping', 'traceroute': '=ping', 'tracert': '=traceroute', 'pong': '=ping',
+    'kick': _('''
+Kick someone out of this group.
+
+Usage: /-kick <target> [reason]
+
+Alias: /-rm /-del
+'''), 'rm': '=kick', 'del': '=rm', 'remove': '=rm', 'delete': '=del',
+    'say': _('''
+Send a message, usually a message starting with /-
+
+Usage: /-say <message>
+
+Example: /-say /-help is used for help.
+
+Alias: /-quote
+'''), 'quote': '=say', 
+    'me': _('''
+Send an action.
+
+Usage: /-me <message>
+
+Example: /-me is reading an article.
+
+Alias: /-action
+'''), 'action': '=me',
+    'stop': _('''
+Stop receiving message for a specific duration.
+
+Usage: /-stop [ <time> | forever | off]
+
+Use y, M, d, h, m, s as time unit.
+
+Example: /-stop 1h30m20s
+
+Alias: /-pause
+'''), 'pause': '=stop', 'sleep': '=stop', 'delay': '=stop',
+    'off': _('''
+Shortcut for /-stop forever
+
+Usage: /-off
+'''),
+    'on': _('''
+Shortcut for /-stop off
+
+Usage: /-on
+'''),
+    'old': _('''
+List message history.
+
+Usage: /-old [-a] [from [length]]
+\t-a\tList history with debugging information.
+
+By default, /-old will list last 25 messages, you can specify duration using a
+number which means lines of messages or a time.
+For help with time specifying, type /-help stop
+'''), 'log': '=old',
+    'quiet': _('''
+Force someone to be quiet.
+
+Usage: /-quiet <target> [time | forever | off]
+
+Alias: /-mute
+'''), 'mute': '=quiet',
+    'block': _('''
+Stop receiving messages from a specific user.
+
+Usage: /-block [target]
+
+If target is not specified, show current blocking list.
+
+See also: /-unblock
+'''),
+    'unblock': _('''
+Opposite of /-block
+
+Usage: /-unblock <target>
+
+See also: /-block
+'''),
+    'quit': _('''
+Quit this group.
+
+Usage: /-quit
+
+If you are not using the official GTalk client, simply remove this group from
+your buddy list.
+
+Alias: /-part /-leave /-exit /-bye
+'''), 'part': '=quit', 'leave': '=quit', 'exit': '=quit', 'bye': '=exit',
+    'eval': _('''
+Evaluate a Python command.
+
+Usage: /-eval <command>
+
+BE CAREFUL TO USE THIS COMMAND!
+
+See also: /-exec /-system
+'''),
+    'exec': _('''
+Execute a Python command.
+
+Usage: /-exec <command>
+
+BE CAREFUL TO USE THIS COMMAND!
+
+See also: /-eval /-system
+'''),
+    'system': _('''
+Execute a system command.
+
+Usage: /-system <command>
+
+BE CAREFUL TO USE THIS COMMAND!
+
+Alias: /-run
+See also: /-eval /-exec
+'''), 'run': '=system'
 }
 
 help_rescan_depth=100
