@@ -135,12 +135,13 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         if len(misc.cmd_log)>config.cmdlogsize:
             misc.cmd_log=misc.cmd_log[:-config.cmdlogsize]
         for i in self.client_roster:
-            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(self, misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
-                try:
-                    self.send_message(mto=i, mbody=body, mtype='chat')
-                    misc.check_time(self, misc.data['quiet'], i)
-                except:
-                    pass
+            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
+                misc.check_time(self, misc.data['quiet'], i)
+                if misc.check_time(self, misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
+                    try:
+                        self.send_message(mto=i, mbody=body, mtype='chat')
+                    except:
+                        pass
 
 if __name__=='__main__':
     misc.restarting=False
