@@ -47,6 +47,17 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     except:
                         pass
         sys.stderr.write(']\n')
+        self.add_event_handler('got_online', self.gotonline)
+
+    def gotonline(self, presence):
+        try:
+            from_jid=sleekxmpp.JID(presence['from']).bare
+            if misc.check_time(self, misc.data['stop'], from_jid) and misc.check_time(self, misc.data['quiet'], from_jid):
+                self.send_presence(pto=presence['from'], pshow='', pstatus=config.group_topic)
+            else:
+                self.send_presence(pto=presence['from'], pshow='dnd', pstatus=config.group_topic)
+        except:
+            pass
 
     def subscribe(self, presence):
         sys.stderr.write('%s subscribed me.\n' % presence['from'])
