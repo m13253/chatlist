@@ -10,6 +10,7 @@ import time
 import command
 import config
 import misc
+import msgfilters
 
 gettext.install('messages', 'locale')
 
@@ -103,6 +104,9 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 if not misc.check_time(misc.data['quiet'], from_jid):
                     msg.reply(_('You have been quieted.')).send()
                     return
+                for msg_filter in msgfilter.msg_filters:
+                    if not msg_filter(self, msg):
+                        return
                 for l in body.splitlines():
                     self.dispatch_message(from_jid, l)
         except UnicodeError:

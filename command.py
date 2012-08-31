@@ -140,8 +140,11 @@ def trigger(xmpp, msg):
             if len(cmd)>=2:
                 to_jid=misc.getjid(xmpp, cmd[1])
                 if to_jid:
-                    xmpp.send_message(mto=to_jid, mbody='%s (%s): %s' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
-                    msg.reply(_('Your message has been sent.'))
+                    if to_jid not in misc.data['block'] or from_jid not in misc.data['block'][to_jid]:
+                        xmpp.send_message(mto=to_jid, mbody='%s (%s): %s' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
+                        msg.reply(_('Your message has been sent.')).send()
+                    else:
+                        msg.reply(_('Error: The receiver has blocked your messages.')).send()
                 else:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
