@@ -813,7 +813,7 @@ Alias: /-action
     'stop': _('''
 Stop receiving message for a specific duration.
 
-Usage: /-stop [ <time> | forever | off]
+Usage: /-stop [ <time> | forever | off ]
 
 Use y, M, d, h, m, s as time unit.
 
@@ -846,7 +846,7 @@ Alias: /-log /-history
     'quiet': _('''
 Force someone to be quiet.
 
-Usage: /-quiet <target> [<time> | forever | off]
+Usage: /-quiet <target> [ <time> | forever | off ]
 
 Alias: /-mute
 '''), 'mute': '=quiet',
