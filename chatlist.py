@@ -134,9 +134,18 @@ if __name__=='__main__':
     misc.restarting=False
     misc.quiting=False
     misc.load_data()
-    for i in ('stop', 'quiet'):
+    for i in ('stop', 'quiet', 'block'):
         if i not in misc.data:
             misc.data[i]={}
+    if config.store_log:
+        if 'msg_log' in misc.data:
+            misc.msg_log=misc.data['msg_log']
+        else:
+            misc.data['msg_log']=misc.msg_log
+        if 'cmd_log' in misc.data:
+            misc.cmd_log=misc.data['cmd_log']
+        else:
+            misc.data['cmd_log']=misc.cmd_log
     for i in config.root:
         if i not in config.admins:
             config.admins.append(i)

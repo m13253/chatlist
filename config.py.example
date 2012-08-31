@@ -13,5 +13,6 @@ welcome_message = 'Welcome to join this group!'
 
 logsize = 500 # Messages are temporarily stored in log so that you can use -old
 cmdlogsize = 500 # Commands are temporarily stored here.
+store_log = True # Logs stored in data file can be restored after restarting.
 
 # vim: et ft=python sts=4 sw=4 ts=4
