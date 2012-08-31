@@ -480,7 +480,7 @@ def trigger(xmpp, msg):
                             needsave=True
                             misc.data['block'][from_jid].remove(to_jid)
                             xmpp.send_message(mto=to_jid, mbody=_('You have been unblocked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
-                            xmpp.send_message(mto=to_jid, mbody=_('You will receive messages from %s from now on.') % misc.getnick(xmpp, to_jid), mtype='chat')
+                            xmpp.send_message(mto=from_jid, mbody=_('You will receive messages from %s from now on.') % misc.getnick(xmpp, to_jid), mtype='chat')
                         sys.stderr.write('\n')
                     if not success:
                         msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
@@ -614,7 +614,7 @@ def trigger(xmpp, msg):
                 blockby=[]
                 for j in misc.data['block']:
                     if i in misc.data['block'][j]:
-                        blockby+=j
+                        blockby.append(j)
                 if blockby:
                     s+='\n'+_('Blocked by:\t%s') % ' '.join([misc.getnick(xmpp, j) for j in blockby])
                 to_resources=xmpp.client_roster[i].resources
