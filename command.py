@@ -218,8 +218,12 @@ def trigger(xmpp, msg):
             arg=[]
             for i in cmd[1:]:
                 if i.startswith('-'):
-                    if 'a' in i and from_jid in config.admins:
-                        from_log=misc.cmd_log
+                    if 'a' in i:
+                        if from_jid in config.admins:
+                            from_log=misc.cmd_log
+                        else:
+                            msg.reply(_('Error: Permission denied.')).send()
+                            return
                 elif i:
                     arg.append(i)
             try:
