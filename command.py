@@ -822,7 +822,7 @@ For help with time specifying, type /-help stop
     'quiet': _('''
 Force someone to be quiet.
 
-Usage: /-quiet <target> [time | forever | off]
+Usage: /-quiet <target> [<time> | forever | off]
 
 Alias: /-mute
 '''), 'mute': '=quiet',
