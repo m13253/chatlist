@@ -124,7 +124,10 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             sys.stderr.write('Exception: %s: %s\n' % (type(e).__name__, e))
 
     def dispatch_message(self, from_jid, body):
-        self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
+        if from_jid=='orzbot@erhandsome.org':
+            self.send_except(from_jid, body)
+        else:
+            self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
 
     def send_except(self, except_jid, body):
         nowtime=time.time()
