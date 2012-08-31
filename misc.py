@@ -264,7 +264,7 @@ def get_status_name(s):
     else:
         return s
 
-def check_time(from_dict, to_jid):
+def check_time(xmpp, from_dict, to_jid):
     if to_jid in from_dict:
         if from_dict[to_jid]==None:
             return False
@@ -274,6 +274,11 @@ def check_time(from_dict, to_jid):
             else:
                 del from_dict[to_jid]
                 save_data()
+                try:
+                    if to_jid not in data['stop'] and to_jid not in data['quiet']:
+                        xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                except:
+                    pass
                 return True
     else:
         return True

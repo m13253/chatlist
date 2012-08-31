@@ -79,7 +79,7 @@ def trigger(xmpp, msg):
             cmd[0]='init'
 
         if cmd[0]=='say':
-            if misc.check_time(misc.data['quiet'], from_jid):
+            if misc.check_time(xmpp, misc.data['quiet'], from_jid):
                 for l in msg['body'].split(None, 1)[1].splitlines():
                     xmpp.dispatch_message(from_jid, l)
             else:
@@ -87,7 +87,7 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='me':
-            if misc.check_time(misc.data['quiet'], from_jid):
+            if misc.check_time(xmpp, misc.data['quiet'], from_jid):
                 from_nick=misc.getnick(xmpp, from_jid)
                 for l in msg['body'].split(None, 1)[1].splitlines():
                     xmpp.send_except(None, '* %s %s' % (from_nick, l))
@@ -308,8 +308,10 @@ def trigger(xmpp, msg):
                     msg.reply(_('You will never receive messages.')).send()
                 else:
                     msg.reply(_('You will not receive messages until %s.') % misc.lctime(to_time)).send()
+                xmpp.send_presence(pto=from_jid, pshow='dnd', pstatus=config.group_topic)
             else:
                 msg.reply(_('You are currently receiving messages.')).send()
+                xmpp.send_presence(pto=from_jid, pshow='', pstatus=config.group_topic)
             return
 
         if cmd[0]=='ping':
@@ -425,10 +427,13 @@ def trigger(xmpp, msg):
                         continue
                     if to_time==None:
                         xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                        xmpp.send_presence(pto=to_jid, pshow='dnd', pstatus=config.group_topic)
                     elif to_time=='off':
                         xmpp.send_message(mto=to_jid, mbody=_('You have been stopped quieting by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                        xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
                     else:
                         xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s until %s.') % (misc.getnick(xmpp, from_jid), misc.lctime(to_time)), mtype='chat')
+                        xmpp.send_presence(pto=to_jid, pshow='dnd', pstatus=config.group_topic)
                     to_nick = misc.getnick(xmpp, to_jid)
                     if to_time==None:
                         xmpp.send_except(to_jid, _('%s has been quieted by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
@@ -568,7 +573,7 @@ def trigger(xmpp, msg):
                     user_count+=1
                     s+='\n\t%s' % misc.getnick(xmpp, i)
                     if option_l:
-                        if not misc.check_time(misc.data['stop'], i):
+                        if not misc.check_time(xmpp, misc.data['stop'], i):
                             s+='\t'+_('<Stopped>')
                         if to_resources:
                             to_priority=-1
@@ -607,14 +612,14 @@ def trigger(xmpp, msg):
                     s+='\n'+_('Jabber ID:\t%s') % i
                 else:
                     s+='\n'+_('Jabber ID:\t%s@%s') % ('*'*len(sleekxmpp.JID(i).user), sleekxmpp.JID(i).domain)
-                if not misc.check_time(misc.data['stop'], i):
+                if not misc.check_time(xmpp, misc.data['stop'], i):
                     if misc.data['stop'][i]==None:
                         s+='\n'+_('Not receiving messages.')
                     else:
                         s+='\n'+_('Not receiving messages until %s.') % misc.lctime(misc.data['stop'][i])
                 if i in misc.data['block']:
                     s+='\n'+_('Blocking:\t%s') % ' '.join([misc.getnick(xmpp, j) for j in misc.data['block'][i]])
-                if not misc.check_time(misc.data['quiet'], i):
+                if not misc.check_time(xmpp, misc.data['quiet'], i):
                     if misc.data['quiet'][i]==None:
                         s+='\n'+_('Quieted.')
                     else:

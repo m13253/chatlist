@@ -28,24 +28,29 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.get_roster()
         self.auto_authorize = True
         self.auto_subscribe = True
+        self.send_presence(pshow='', pstatus=config.group_topic)
         sys.stderr.write('roster = [\n')
         for i in self.client_roster:
             if self.client_roster[i]['to']:
                 if self.client_roster[i]['subscription']=='both':
                     sys.stderr.write('\t%s' % i)
                     misc.add_nicktable(self, i)
+                    if not (misc.check_time(misc.data['stop'], i) or misc.check_time(misc.data['quiet'], i)):
+                        self.send_presence(pto=i, pshow='dnd', pstatus=config.group_topic)
                     sys.stderr.write('\n')
                 elif self.client_roster[i]['subscription']=='to':
                     try:
                         misc.del_roster_item(i)
                         misc.client_roster.remove(i)
+                        if i in misc.data['stop']:
+                            del misc.data['stop'][i]
                     except:
                         pass
         sys.stderr.write(']\n')
-        self.send_presence(pstatus=config.group_topic)
 
     def subscribe(self, presence):
         sys.stderr.write('%s subscribed me.\n' % presence['from'])
+        self.send_presence(pto=jid, pshow='away', pstatus=_('Not accepted subscription yet'))
 
     def subscribed(self, presence):
         jid=sleekxmpp.JID(presence['from']).bare
@@ -62,6 +67,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('You have been given a random nickname %s, please use /-nick to change your nickname.'), config.command_prefix[0]) % to_nick, mtype='chat')
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('For more help, type /-help'), config.command_prefix[0]), mtype='chat')
         self.send_except(jid, _('%s has joined this group.') % to_nick)
+        self.send_presence(pto=jid, pshow='', pstatus=config.group_topic)
 
     def unsubscribe(self, presence):
         from_jid=sleekxmpp.JID(presence['from']).bare
@@ -102,7 +108,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             else:
                 if from_jid in misc.data['stop']:
                     del misc.data['stop'][from_jid]
-                if not misc.check_time(misc.data['quiet'], from_jid):
+                if not misc.check_time(self, misc.data['quiet'], from_jid):
                     msg.reply(_('You have been quieted.')).send()
                     return
                 for msg_filter in msgfilter.msg_filters:
@@ -129,7 +135,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         if len(misc.cmd_log)>config.cmdlogsize:
             misc.cmd_log=misc.cmd_log[:-config.cmdlogsize]
         for i in self.client_roster:
-            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
+            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources and misc.check_time(self, misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
                 try:
                     self.send_message(mto=i, mbody=body, mtype='chat')
                 except:
