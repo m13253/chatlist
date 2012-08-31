@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-31 22:25+0800\n"
+"POT-Creation-Date: 2012-09-01 01:21+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,44 +17,44 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: chatlist.py:53
+#: chatlist.py:64
 msgid "Not accepted subscription yet"
-msgstr ""
+msgstr "尚未接受好友请求"
 
-#: chatlist.py:67
+#: chatlist.py:78
 #, python-format
 msgid ""
 "You have been given a random nickname %s, please use /-nick to change your "
 "nickname."
 msgstr "您已被给予随机昵称 %s，请使用 /-nick 来更改昵称。"
 
-#: chatlist.py:68
+#: chatlist.py:79
 msgid "For more help, type /-help"
 msgstr "键入 /-help 以寻求更多帮助。"
 
-#: chatlist.py:69
+#: chatlist.py:80
 #, python-format
 msgid "%s has joined this group."
 msgstr "%s 已加入本群。"
 
-#: chatlist.py:84 command.py:216
+#: chatlist.py:95 command.py:216
 #, python-format
 msgid "%s has quited this group."
 msgstr "%s 已退出本群。"
 
-#: chatlist.py:99
+#: chatlist.py:110
 msgid "You have not accept the buddy request."
 msgstr "您还没有接受好友请求。"
 
-#: chatlist.py:101
+#: chatlist.py:112
 msgid "You have not joined this group."
 msgstr "您还没有加入本群。"
 
-#: chatlist.py:104
+#: chatlist.py:115
 msgid "Your message is too long, please consider using a pastebin."
 msgstr "您的消息过长，请考虑使用 pastebin。"
 
-#: chatlist.py:112 command.py:86 command.py:95
+#: chatlist.py:123 command.py:86 command.py:95
 msgid "You have been quieted."
 msgstr "您已被禁言。"
 
@@ -147,16 +147,16 @@ msgstr "没有消息符合您的条件。"
 
 #: command.py:318
 msgid "You will never receive messages."
-msgstr "您将永远停止接受消息。"
+msgstr "您将永远停止接收消息。"
 
 #: command.py:320
 #, python-format
 msgid "You will not receive messages until %s."
-msgstr "您在 %s 之前将不接受消息。"
+msgstr "您在 %s 之前将不接收消息。"
 
 #: command.py:323
 msgid "You are currently receiving messages."
-msgstr "您当前正接受消息。"
+msgstr "您当前正接收消息。"
 
 #: command.py:344
 msgid "Restarting."
@@ -242,7 +242,7 @@ msgstr "您已被 %s 屏蔽。"
 #: command.py:482
 #, python-format
 msgid "You will not receive messages from %s anymore."
-msgstr "您将不接受来自 %s 的消息。"
+msgstr "您将不接收来自 %s 的消息。"
 
 #: command.py:490
 #, python-format
@@ -261,7 +261,7 @@ msgstr "您已被 %s 解除屏蔽。"
 #: command.py:510
 #, python-format
 msgid "You will receive messages from %s from now on."
-msgstr "您将继续接受来自 %s 的消息。"
+msgstr "您将继续接收来自 %s 的消息。"
 
 #: command.py:519
 msgid "Error: /-unblock takes at least one argument."
@@ -334,12 +334,12 @@ msgstr "JID：\t%s@%s"
 
 #: command.py:631
 msgid "Not receiving messages."
-msgstr "不接受消息。"
+msgstr "不接收消息。"
 
 #: command.py:633
 #, python-format
 msgid "Not receiving messages until %s."
-msgstr "在 %s 之前不接受消息。"
+msgstr "在 %s 之前不接收消息。"
 
 #: command.py:635
 #, python-format
@@ -707,7 +707,7 @@ msgid ""
 "Alias: /-pause\n"
 msgstr ""
 "\n"
-"在一段时间内停止接受消息\n"
+"在一段时间内停止接收消息。\n"
 "\n"
 "用法：/-stop [ <时间> | forever | off]\n"
 "\n"
