@@ -436,6 +436,61 @@ def trigger(xmpp, msg):
                 msg.reply(_('Error: Permission denied.')).send()
             return
 
+        if cmd[0]=='block':
+            if len(cmd)>1:
+                isAdmin=from_jid in config.admins
+                needsave=False
+                for i in cmd[1:]:
+                    success=False
+                    for to_jid in misc.find_users(xmpp, i, isAdmin):
+                        success=True
+                        sys.stderr.write('Blocking %s by %s.' % (to_jid, from_jid))
+                        if from_jid not in misc.data['block']:
+                            misc.data['block'][from_jid]=[]
+                        if to_jid not in misc.data['block'][from_jid]:
+                            needsave=True
+                            misc.data['block'][from_jid].append(to_jid)
+                            xmpp.send_message(mto=to_jid, mbody=_('You have been blocked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                            xmpp.send_message(mto=from_jid, mbody=_('You will not receive messages from %s anymore.') % misc.getnick(xmpp, to_jid), mtype='chat')
+                        sys.stderr.write('\n')
+                    if not success:
+                        msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+                if needsave:
+                    misc.save_data()
+            else:
+                if from_jid in misc.data['block']:
+                    msg.reply(_('Your blocking list: %s') % ' '.join([misc.getnick(xmpp, i) for i in misc.data['block'][from_jid]])).send()
+                else:
+                    msg.reply(_('Your blocking list is empty.')).send()
+            return
+
+        if cmd[0]=='unblock':
+            if len(cmd)>1:
+                if from_jid not in misc.data['block']:
+                    return
+                isAdmin=from_jid in config.admins
+                needsave=False
+                for i in cmd[1:]:
+                    success=False
+                    for to_jid in misc.find_users(xmpp, i, isAdmin):
+                        success=True
+                        sys.stderr.write('Unblocking %s by %s.' % (to_jid, from_jid))
+                        if to_jid in misc.data['block'][from_jid]:
+                            needsave=True
+                            misc.data['block'][from_jid].remove(to_jid)
+                            xmpp.send_message(mto=to_jid, mbody=_('You have been unblocked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
+                            xmpp.send_message(mto=to_jid, mbody=_('You will receive messages from %s from now on.') % misc.getnick(xmpp, to_jid), mtype='chat')
+                        sys.stderr.write('\n')
+                    if not success:
+                        msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
+                if needsave:
+                    if not misc.data['block'][from_jid]:
+                        del misc.data['block'][from_jid]
+                    misc.save_data()
+            else:
+                msg.reply(misc.replace_prefix(_('Error: /-unblock takes at least one argument.'), prefix)).send()
+            return
+
         if cmd[0]=='setnick':
             if len(cmd)==3:
                 if from_jid in config.admins:
@@ -548,11 +603,19 @@ def trigger(xmpp, msg):
                         s+='\n'+_('Not receiving messages.')
                     else:
                         s+='\n'+_('Not receiving messages until %s.') % misc.lctime(misc.data['stop'][i])
+                if i in misc.data['block']:
+                    s+='\n'+_('Blocking:\t%s') % ' '.join([misc.getnick(xmpp, j) for j in misc.data['block'][i]])
                 if not misc.check_time(misc.data['quiet'], i):
                     if misc.data['quiet'][i]==None:
                         s+='\n'+_('Quieted.')
                     else:
                         s+='\n'+_('Quieted until %s.') % misc.lctime(misc.data['quiet'][i])
+                blockby=[]
+                for j in misc.data['block']:
+                    if i in misc.data['block'][j]:
+                        blockby+=j
+                if blockby:
+                    s+='\n'+_('Blocked by:\t%s') % ' '.join([misc.getnick(xmpp, j) for j in blockby])
                 to_resources=xmpp.client_roster[i].resources
                 if to_resources:
                     s+='\n'+_('Online resources:')
