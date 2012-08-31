@@ -2,6 +2,7 @@
 
 JID = 'group@example.com/bot'
 password = '********'
+server = ('example.com', 5222)
 root = ['you@example.com'] # the biggest, the most dangerous privilege
 admins = ['you@example.com', 'another@example.com']
 datafile = 'data/data.db' # will be automatically created

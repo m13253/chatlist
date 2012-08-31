@@ -169,7 +169,7 @@ if __name__=='__main__':
             xmpp.register_plugin('xep_0004') # Data Forms
             xmpp.register_plugin('xep_0060') # PubSub
             xmpp.register_plugin('xep_0199') # XMPP Ping
-            if xmpp.connect():
+            if xmpp.connect(config.server):
                 xmpp.process(block=True)
             else:
                 sys.stderr.write('Connection error.')
