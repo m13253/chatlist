@@ -354,7 +354,6 @@ def trigger(xmpp, msg):
                         xmpp.send_message(mto=to_jid, mbody=_('You have been kicked by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
                     if to_jid in misc.data['stop']:
                         del misc.data['stop'][to_jid]
-                        misc.save_data()
                     to_nick = misc.getnick(xmpp, to_jid)
                     misc.del_nicktable(xmpp, to_jid)
                     try:
@@ -367,7 +366,9 @@ def trigger(xmpp, msg):
                     else:
                         xmpp.send_except(to_jid, _('%s has been kicked by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
                     sys.stderr.write('\n')
-                if not success:
+                if success:
+                    misc.save_data()
+                else:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
                 msg.reply(_('Error: Permission denied.')).send()
@@ -400,12 +401,17 @@ def trigger(xmpp, msg):
                 for to_jid in misc.find_users(xmpp, cmd[1], True):
                     success=True
                     sys.stderr.write('Quieting %s.' % to_jid)
+                    if to_jid in misc.data['quiet']:
+                        orig_time=misc.data['quiet'][to_jid]
+                    else:
+                        orig_time='off'
                     if to_time!='off':
                         misc.data['quiet'][to_jid]=to_time
                     else:
                         if to_jid in misc.data['quiet']:
                             del misc.data['quiet'][to_jid]
-                    misc.save_data()
+                    if orig_time==to_time:
+                        continue
                     if to_time==None:
                         xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
                     elif to_time=='off':
@@ -420,7 +426,9 @@ def trigger(xmpp, msg):
                     else:
                         xmpp.send_except(to_jid, _('%s has been quieted by %s until %s.') % (to_nick, misc.getnick(xmpp, from_jid), misc.lctime(to_time)))
                     sys.stderr.write('\n')
-                if not success:
+                if success:
+                    misc.save_data()
+                else:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
                 msg.reply(_('Error: Permission denied.')).send()
