@@ -326,13 +326,14 @@ def trigger(xmpp, msg):
                     msg.reply(_('Restarting.')).send(now=True)
                     if not quiet:
                         xmpp.send_except(from_jid, _('Restarting by %s.') % misc.getnick(xmpp, from_jid))
+                    raise SystemExit
                 elif from_jid in config.root:
                     msg.reply(_('Shutting down.')).send(now=True)
                     if not quiet:
                         xmpp.send_except(from_jid, _('Shutting down by %s.') % misc.getnick(xmpp, from_jid))
+                    raise SystemExit
                 else:
                     msg.reply(_('Error: Permission denied.')).send()
-                raise SystemExit
             else:
                 msg.reply(_('Error: Permission denied.')).send()
             return
