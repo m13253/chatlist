@@ -66,7 +66,7 @@ def trigger(xmpp, msg):
             cmd=['stop', 'off']
         elif cmd[0]=='off':
             cmd=['stop', 'forever']
-        elif cmd[0]=='log':
+        elif cmd[0] in ('log', 'history', 'hist'):
             cmd[0]='old'
         elif cmd[0]=='mute':
             cmd[0]='quiet'
@@ -818,7 +818,9 @@ Usage: /-old [-a] [from [length]]
 By default, /-old will list last 25 messages, you can specify duration using a
 number which means lines of messages or a time.
 For help with time specifying, type /-help stop
-'''), 'log': '=old',
+
+Alias: /-log /-history
+'''), 'log': '=old', 'history': '=old', 'hist': '=history',
     'quiet': _('''
 Force someone to be quiet.
 
