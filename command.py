@@ -333,6 +333,7 @@ def trigger(xmpp, msg):
                         xmpp.send_except(from_jid, _('Shutting down by %s.') % misc.getnick(xmpp, from_jid))
                     raise SystemExit
                 else:
+                    misc.quiting=False
                     msg.reply(_('Error: Permission denied.')).send()
             else:
                 msg.reply(_('Error: Permission denied.')).send()
