@@ -266,7 +266,7 @@ def trigger(xmpp, msg):
                 sres=''
                 sres+='\n'+_('Start:\t%s') % misc.lctime(res[0][0])
                 for i in res:
-                    sres+='\n(%s) %s' % (time.strftime("%x", time.localtime(i[0])), i[1])
+                    sres+='\n(%s) %s' % (time.strftime("%T", time.localtime(i[0])), i[1])
                 sres+='\n'+_('End:\t%s') % misc.lctime(res[-1][0])
                 msg.reply(sres).send()
             else:
