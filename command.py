@@ -302,7 +302,7 @@ def trigger(xmpp, msg):
                 except ValueError:
                         msg.reply(_('Error: Invalid time specification.')).send()
                         return
-            if from_jid in misc.data['stop']:
+            if not misc.check_time(xmpp, misc.data['stop'], from_jid):
                 to_time=misc.data['stop'][from_jid]
                 if to_time==None:
                     msg.reply(_('You will never receive messages.')).send()
@@ -311,7 +311,6 @@ def trigger(xmpp, msg):
                 xmpp.send_presence(pto=from_jid, pshow='dnd', pstatus=config.group_topic)
             else:
                 msg.reply(_('You are currently receiving messages.')).send()
-                xmpp.send_presence(pto=from_jid, pshow='', pstatus=config.group_topic)
             return
 
         if cmd[0]=='ping':
