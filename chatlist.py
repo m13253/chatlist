@@ -169,6 +169,7 @@ if __name__=='__main__':
         raise SystemExit
     except (SystemExit, KeyboardInterrupt):
         sys.stderr.write('Quiting...')
+        time.sleep(3)
         xmpp.disconnect(wait=True)
         misc.save_data()
         sys.stderr.write('\n')
