@@ -148,7 +148,7 @@ def trigger(xmpp, msg):
                 else:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
-                msg.reply(misc.replace_prefix(_('Error: /-setnick takes exactly two arguments.'), prefix)).send()
+                msg.reply(misc.replace_prefix(_('Error: /-msg takes exactly two arguments.'), prefix)).send()
             return
 
         if cmd[0]=='help':
