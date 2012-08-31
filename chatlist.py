@@ -42,6 +42,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     except:
                         pass
         sys.stderr.write(']\n')
+        self.send_presence(pstatus=config.group_topic)
 
     def subscribe(self, presence):
         sys.stderr.write('%s subscribed me.\n' % presence['from'])
