@@ -22,6 +22,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.add_event_handler('presence_subscribe', self.subscribe)
         self.add_event_handler('presence_subscribed', self.subscribed)
         self.add_event_handler('presence_unsubscribe', self.unsubscribe)
+        self.add_event_handler('got_online', self.gotonline)
 
     def start(self, event):
         self.send_presence()
@@ -47,7 +48,6 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     except:
                         pass
         sys.stderr.write(']\n')
-        self.add_event_handler('got_online', self.gotonline)
 
     def gotonline(self, presence):
         try:
@@ -144,10 +144,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         nowtime=time.time()
         misc.msg_log.append((nowtime, body))
         if len(misc.msg_log)>config.logsize:
-            misc.msg_log=misc.msg_log[:-config.logsize]
-        misc.cmd_log.append((nowtime, body))
-        if len(misc.cmd_log)>config.cmdlogsize:
-            misc.cmd_log=misc.cmd_log[:-config.cmdlogsize]
+            misc.msg_log[len(misc.msg_log)-config.logsize:]=[]
         for i in self.client_roster:
             if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
                 misc.check_time(self, misc.data['quiet'], i)
