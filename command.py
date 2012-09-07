@@ -95,7 +95,7 @@ def trigger(xmpp, msg):
 
         misc.cmd_log.append((time.time(), '%s: %s' % (from_jid, msg['body'])))
         if len(misc.cmd_log)>config.cmdlogsize:
-            misc.cmd_log[len(misc.cmd_log)-config.msglogsize:]=[]
+            misc.cmd_log[len(misc.cmd_log)-config.cmdlogsize:]=[]
 
         if cmd[0]=='eval':
             if from_jid in config.root:
