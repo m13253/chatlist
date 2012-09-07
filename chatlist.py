@@ -22,6 +22,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.add_event_handler('presence_subscribe', self.subscribe)
         self.add_event_handler('presence_subscribed', self.subscribed)
         self.add_event_handler('presence_unsubscribe', self.unsubscribe)
+        self.add_event_handler('got_online', self.gotonline)
 
     def start(self, event):
         self.send_presence()
@@ -47,7 +48,6 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     except:
                         pass
         sys.stderr.write(']\n')
-        self.add_event_handler('got_online', self.gotonline)
 
     def gotonline(self, presence):
         try:

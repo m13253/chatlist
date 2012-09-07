@@ -22,17 +22,15 @@ def trigger(xmpp, msg):
         if not cmd:
             return
 
-        if cmd[0] in ('users', 'user', 'names', 'name', 'list', 'dir', 'la'):
+        if cmd[0] in ('names', 'name', 'list', 'la'):
             cmd[0]='ls'
             cmd.append('-a')
-        elif cmd[0]=='online':
-            cmd[0]='ls'
-        elif cmd[0]=='ll':
-            cmd[0]='ls'
-            cmd.append('-l')
-        elif cmd[0] in ('lla', 'lal'):
+        elif cmd[0] in ('users', 'user', 'dir', 'lla', 'lal'):
             cmd[0]='ls'
             cmd.append('-la')
+        elif cmd[0] in ('online', 'll'):
+            cmd[0]='ls'
+            cmd.append('-l')
         elif cmd[0] in ('man', 'info'):
             cmd[0]='help'
         elif cmd[0] in ('stat', 'whowas', 'dig', 'nslookup'):
