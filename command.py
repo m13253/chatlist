@@ -97,7 +97,7 @@ def trigger(xmpp, msg):
 
         misc.cmd_log.append((time.time(), '%s: %s' % (from_jid, msg['body'])))
         if len(misc.cmd_log)>config.cmdlogsize:
-            misc.cmd_log=misc.cmd_log[:-config.cmdlogsize]
+            misc.cmd_log[len(misc.cmd_log)-config.msglogsize:]=[]
 
         if cmd[0]=='eval':
             if from_jid in config.root:
@@ -221,7 +221,7 @@ def trigger(xmpp, msg):
             arg=[]
             for i in cmd[1:]:
                 if i.startswith('-'):
-                    if 'a' in i:
+                    if 'c' in i:
                         if from_jid in config.admins:
                             from_log=misc.cmd_log
                         else:
@@ -834,11 +834,11 @@ Usage: /-on
     'old': _('''
 List message history.
 
-Usage: /-old [-a] [from [length]]
-\t-a\tList history with debugging information.
+Usage: /-old [-c] [from [length]]
+\t-c\tList command history. (administrator only)
 
-By default, /-old will list last 25 messages, you can specify duration using a
-number which means lines of messages or a time.
+By default, /-old will list last 25 messages, you can specify either a number
+which means message count or a time duration.
 For help with time specifying, type /-help stop
 
 Alias: /-log /-history

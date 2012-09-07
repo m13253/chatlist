@@ -141,10 +141,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         nowtime=time.time()
         misc.msg_log.append((nowtime, body))
         if len(misc.msg_log)>config.logsize:
-            misc.msg_log=misc.msg_log[:-config.logsize]
-        misc.cmd_log.append((nowtime, body))
-        if len(misc.cmd_log)>config.cmdlogsize:
-            misc.cmd_log=misc.cmd_log[:-config.cmdlogsize]
+            misc.msg_log[len(misc.msg_log)-config.logsize:]=[]
         for i in self.client_roster:
             if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
                 misc.check_time(self, misc.data['quiet'], i)
