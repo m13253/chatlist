@@ -125,7 +125,7 @@ def trigger(xmpp, msg):
         if cmd[0]=='system':
             if from_jid in config.root:
                 if len(cmd)>1:
-                    msg.reply('\n'+subprocess.Popen(msg['body'].split(None, 1)[1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True).communicate()[0].strip('\n').decode('utf-8', 'replace')).send()
+                    msg.reply('\n'+subprocess.Popen(msg['body'].split(None, 1)[1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True).communicate()[0].strip(b'\n').decode('utf-8', 'replace')).send()
                 else:
                     msg.reply(misc.replace_prefix(_('Error: /-system takes arguments'), prefix)).send()
             elif from_jid in config.admins:
