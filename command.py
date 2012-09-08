@@ -619,7 +619,9 @@ def trigger(xmpp, msg):
                 msg.reply(misc.replace_prefix(_('Error: /-whois takes at least one argument.'), prefix)).send()
                 return
             s=''
+            success=False
             for i in misc.find_users(xmpp, glob, isAdmin):
+                success=True
                 s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
                 if isAdmin:
                     s+='\n'+_('Jabber ID:\t%s') % i
@@ -650,7 +652,9 @@ def trigger(xmpp, msg):
                         s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
                         if to_resources[j]['status']:
                             s+='\t[%s]' % to_resources[j]['status']
-            msg.reply(s[1:]).send()
+            if not success:
+                s='\n'+_('Error: User %s is not a member of this group.') % (cmd[1])
+            msg.reply(s[1:8192]).send()
             return
 
         msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
