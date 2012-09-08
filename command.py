@@ -530,7 +530,7 @@ def trigger(xmpp, msg):
                         else:
                             old_nick=misc.getnick(xmpp, cmd[1])
                             misc.change_nicktable(xmpp, from_jid, new_nick)
-                            xmpp.update_roster(cmd[1], name=new_nick)
+                            xmpp.update_roster(from_jid, name=new_nick)
                             xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (old_nick, new_nick))
                     else:
                         msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
