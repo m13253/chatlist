@@ -522,15 +522,16 @@ def trigger(xmpp, msg):
                 if from_jid in config.admins:
                     to_jid=misc.getjid(xmpp, cmd[1])
                     if to_jid:
+                        new_nick=cmd[2]
                         if not misc.isnickvalid(new_nick):
                             msg.reply(_('Nickname %s not vaild.') % new_nick).send()
-                        elif misc.getnick(xmpp, cmd[2]):
-                            msg.reply(_('Nickname %s is already in use.') % cmd[2]).send()
+                        elif misc.getnick(xmpp, new_nick):
+                            msg.reply(_('Nickname %s is already in use.') % new_nick).send()
                         else:
-                            oldnick=misc.getnick(xmpp, cmd[1])
-                            misc.change_nicktable(xmpp, from_jid, cmd[2])
-                            xmpp.update_roster(cmd[1], name=cmd[2])
-                            xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (oldnick, cmd[2]))
+                            old_nick=misc.getnick(xmpp, cmd[1])
+                            misc.change_nicktable(xmpp, from_jid, new_nick)
+                            xmpp.update_roster(cmd[1], name=new_nick)
+                            xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (old_nick, new_nick))
                     else:
                         msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
                     return
