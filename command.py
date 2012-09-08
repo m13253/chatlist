@@ -529,8 +529,8 @@ def trigger(xmpp, msg):
                             msg.reply(_('Nickname %s is already in use.') % new_nick).send()
                         else:
                             old_nick=misc.getnick(xmpp, cmd[1])
-                            misc.change_nicktable(xmpp, cmd[1], new_nick)
-                            xmpp.update_roster(cmd[1], name=new_nick)
+                            misc.change_nicktable(xmpp, to_jid, new_nick)
+                            xmpp.update_roster(to_jid, name=new_nick)
                             xmpp.send_except(None, _('%s is forced to changed its nick to %s.') % (old_nick, new_nick))
                     else:
                         msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
@@ -619,7 +619,9 @@ def trigger(xmpp, msg):
                 msg.reply(misc.replace_prefix(_('Error: /-whois takes at least one argument.'), prefix)).send()
                 return
             s=''
+            success=False
             for i in misc.find_users(xmpp, glob, isAdmin):
+                success=True
                 s+='\n\n'+_('Nickname:\t%s') % misc.getnick(xmpp, i)
                 if isAdmin:
                     s+='\n'+_('Jabber ID:\t%s') % i
@@ -650,7 +652,9 @@ def trigger(xmpp, msg):
                         s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
                         if to_resources[j]['status']:
                             s+='\t[%s]' % to_resources[j]['status']
-            msg.reply(s[1:]).send()
+            if not success:
+                s='\n'+_('Error: User %s is not a member of this group.') % (cmd[1])
+            msg.reply(s[1:8192]).send()
             return
 
         msg.reply(misc.replace_prefix(_('Error: Unknown command. For help, type /-help'), prefix)).send()
