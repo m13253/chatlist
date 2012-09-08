@@ -36,7 +36,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 if self.client_roster[i]['subscription']=='both':
                     sys.stderr.write('\t%s' % i)
                     misc.add_nicktable(self, i)
-                    if not (misc.check_time(self, misc.data['stop'], i) or misc.check_time(misc.data['quiet'], i)):
+                    if not (misc.check_time(self, misc.data['stop'], i) or misc.check_time(self, misc.data['quiet'], i)):
                         self.send_presence(pto=i, pshow='dnd', pstatus=config.group_topic)
                     sys.stderr.write('\n')
                 elif self.client_roster[i]['subscription']=='to':
