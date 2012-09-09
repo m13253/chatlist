@@ -28,3 +28,5 @@ def filter_ayt(xmpp, msg):
     return True
 
 msg_filters=[filter_autoreply, filter_ayt]
+
+# vim: et ft=python sts=4 sw=4 ts=4
