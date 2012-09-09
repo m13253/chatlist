@@ -211,7 +211,7 @@ def trigger(xmpp, msg):
                 xmpp.client_roster.remove(from_jid)
             except:
                 pass
-            xmpp.send_except(_('%s has quited this group.') % to_nick)
+            xmpp.send_except(from_jid, _('%s has quited this group.') % to_nick)
             return
 
         if cmd[0]=='old':
