@@ -257,7 +257,7 @@ def get_status_name(s):
         return _('do not disturb')
     elif s=='away':
         return _('away')
-    elif s=='xz' or s=='extended away':
+    elif s=='xa' or s=='extended away':
         return _('extended away')
     elif s=='unavailable':
         return _('unavailable')
