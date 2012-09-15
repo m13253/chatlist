@@ -23,7 +23,7 @@ def filter_autoreply(xmpp, msg):
 def filter_pastebin(xmpp, msg):
     if len(msg['body'])>280:
         msg.reply(_('Your message is too long, please consider using a pastebin.')).send()
-        return False
+        return msg['from'].bare=='orzbot@erhandsome.org'
     return True
 
 def filter_ayt(xmpp, msg):
