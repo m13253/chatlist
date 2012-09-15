@@ -599,7 +599,7 @@ def trigger(xmpp, msg):
                                     to_status=to_resources[j]['status']
                             s+='\t(%s)' % misc.get_status_name(to_show)
                             if to_status:
-                                s+=' [%s]' % to_status
+                                s+=' [%s]' % ' '.join(to_status.splitlines())
                         else:
                             s+='\t(%s)' % _('unavailable')
                     else:
@@ -651,7 +651,7 @@ def trigger(xmpp, msg):
                     for j in to_resources:
                         s+='\n\t%s\t(%s)' % (j, misc.get_status_name(to_resources[j]['show']))
                         if to_resources[j]['status']:
-                            s+='\t[%s]' % to_resources[j]['status']
+                            s+='\t[%s]' % ' '.join(to_resources[j]['status'].splitlines())
             if not success:
                 s='\n'+_('Error: User %s is not a member of this group.') % (cmd[1])
             msg.reply(s[1:8192]).send()
