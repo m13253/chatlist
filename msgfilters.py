@@ -18,11 +18,17 @@ def filter_autoreply(xmpp, msg):
         return False
     return True
 
+def filter_pastebin(xmpp, msg):
+    if len(msg['body'])>280:
+        msg.reply(_('Your message is too long, please consider using a pastebin.')).send()
+        return False
+    return True
+
 def filter_ayt(xmpp, msg):
     if re_ayt.match(msg['body']):
         msg.reply(misc.replace_prefix(_('Please type /-ls to list online users, or type /-help for further help.'), config.command_prefix[0])).send()
     return True
 
-msg_filters=[filter_autoreply, filter_ayt]
+msg_filters=[filter_autoreply, filter_pastebin, filter_ayt]
 
 # vim: et ft=python sts=4 sw=4 ts=4
