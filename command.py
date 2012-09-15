@@ -77,7 +77,9 @@ def trigger(xmpp, msg):
             cmd[0]='init'
 
         if cmd[0]=='say':
-            if misc.check_time(xmpp, misc.data['quiet'], from_jid):
+            if len(cmd)<2:
+                msg.reply(misc.replace_prefix(_('Error: /-say takes arguments.'), prefix)).send()
+            elif misc.check_time(xmpp, misc.data['quiet'], from_jid):
                 for l in msg['body'].split(None, 1)[1].splitlines():
                     xmpp.dispatch_message(from_jid, l)
             else:
@@ -85,7 +87,9 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='me':
-            if misc.check_time(xmpp, misc.data['quiet'], from_jid):
+            if len(cmd)<2:
+                msg.reply(misc.replace_prefix(_('Error: /-me takes arguments.'), prefix)).send()
+            elif misc.check_time(xmpp, misc.data['quiet'], from_jid):
                 from_nick=misc.getnick(xmpp, from_jid)
                 for l in msg['body'].split(None, 1)[1].splitlines():
                     xmpp.send_except(None, '* %s %s' % (from_nick, l))
@@ -102,7 +106,7 @@ def trigger(xmpp, msg):
                 if len(cmd)>1:
                     msg.reply(str(eval(msg['body'].split(None, 1)[1]))).send()
                 else:
-                    msg.reply(misc.replace_prefix(_('Error: /-eval takes arguments'), prefix)).send()
+                    msg.reply(misc.replace_prefix(_('Error: /-eval takes arguments.'), prefix)).send()
             elif from_jid in config.admins:
                 msg.reply(_('Error: Permission denied.')).send()
             else:
@@ -115,7 +119,7 @@ def trigger(xmpp, msg):
                     exec(msg['body'].split(None, 1)[1])
                     msg.reply(_('Command executed.')).send()
                 else:
-                    msg.reply(misc.replace_prefix(_('Error: /-exec takes arguments'), prefix)).send()
+                    msg.reply(misc.replace_prefix(_('Error: /-exec takes arguments.'), prefix)).send()
             elif from_jid in config.admins:
                 msg.reply(_('Error: Permission denied.')).send()
             else:
@@ -127,7 +131,7 @@ def trigger(xmpp, msg):
                 if len(cmd)>1:
                     msg.reply('\n'+subprocess.Popen(msg['body'].split(None, 1)[1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True).communicate()[0].strip(b'\n').decode('utf-8', 'replace')).send()
                 else:
-                    msg.reply(misc.replace_prefix(_('Error: /-system takes arguments'), prefix)).send()
+                    msg.reply(misc.replace_prefix(_('Error: /-system takes arguments.'), prefix)).send()
             elif from_jid in config.admins:
                 msg.reply(_('Error: Permission denied.')).send()
             else:
@@ -135,7 +139,7 @@ def trigger(xmpp, msg):
             return
 
         if cmd[0]=='msg':
-            if len(cmd)>=2:
+            if len(cmd)>2:
                 to_jid=misc.getjid(xmpp, cmd[1])
                 if to_jid:
                     if to_jid not in misc.data['block'] or from_jid not in misc.data['block'][to_jid]:
