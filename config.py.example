@@ -12,6 +12,7 @@ command_prefix = '-/)' # A message starting with one of these characters will tr
 # '/-' will be replaced by command_prefix[0], for '/', type '//'
 welcome_message = 'Welcome to join this group!'
 
+group_nick = 'Test group'
 group_topic = 'Test group powered by chatlist'
 
 logsize = 500 # Messages are temporarily stored in log so that you can use -old
