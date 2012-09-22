@@ -25,11 +25,10 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.add_event_handler('got_online', self.gotonline)
 
     def start(self, event):
-        self.send_presence()
+        self.send_presence(pshow='', pnick=config.group_nick, pstatus=config.group_topic)
         self.get_roster()
         self.auto_authorize = True
         self.auto_subscribe = True
-        self.send_presence(pshow='', pstatus=config.group_topic)
         sys.stderr.write('roster = [\n')
         for i in self.client_roster:
             if self.client_roster[i]['to']:
@@ -37,7 +36,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     sys.stderr.write('\t%s' % i)
                     misc.add_nicktable(self, i)
                     if not (misc.check_time(self, misc.data['stop'], i) or misc.check_time(self, misc.data['quiet'], i)):
-                        self.send_presence(pto=i, pshow='dnd', pstatus=config.group_topic)
+                        self.send_presence(pto=i, pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
                     sys.stderr.write('\n')
                 elif self.client_roster[i]['subscription']=='to':
                     try:
@@ -53,15 +52,15 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         try:
             from_jid=sleekxmpp.JID(presence['from']).bare
             if misc.check_time(self, misc.data['stop'], from_jid) and misc.check_time(self, misc.data['quiet'], from_jid):
-                self.send_presence(pto=presence['from'], pshow='', pstatus=config.group_topic)
+                self.send_presence(pto=presence['from'], pshow='', pnick=config.group_nick, pstatus=config.group_topic)
             else:
-                self.send_presence(pto=presence['from'], pshow='dnd', pstatus=config.group_topic)
+                self.send_presence(pto=presence['from'], pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
         except:
             pass
 
     def subscribe(self, presence):
         sys.stderr.write('%s subscribed me.\n' % presence['from'])
-        self.send_presence(pto=jid, pshow='away', pstatus=_('Not accepted subscription yet'))
+        self.send_presence(pto=jid, pshow='away', pnick=config.group_nick, pstatus=_('Not accepted subscription yet'))
 
     def subscribed(self, presence):
         jid=sleekxmpp.JID(presence['from']).bare
@@ -78,7 +77,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('You have been given a random nickname %s, please use /-nick to change your nickname.'), config.command_prefix[0]) % to_nick, mtype='chat')
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(_('For more help, type /-help'), config.command_prefix[0]), mtype='chat')
         self.send_except(jid, _('%s has joined this group.') % to_nick)
-        self.send_presence(pto=jid, pshow='', pstatus=config.group_topic)
+        self.send_presence(pto=jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
 
     def unsubscribe(self, presence):
         from_jid=sleekxmpp.JID(presence['from']).bare

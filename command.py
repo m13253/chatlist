@@ -295,7 +295,7 @@ def trigger(xmpp, msg):
                             misc.save_data()
                             try:
                                 if to_jid not in data['stop'] and to_jid not in data['quiet']:
-                                    xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                                    xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
                             except:
                                 pass
                     else:
@@ -307,7 +307,7 @@ def trigger(xmpp, msg):
                             del misc.data['stop'][from_jid]
                             try:
                                 if to_jid not in data['stop'] and to_jid not in data['quiet']:
-                                    xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                                    xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
                             except:
                                 pass
                         misc.save_data()
@@ -320,7 +320,7 @@ def trigger(xmpp, msg):
                     msg.reply(_('You will never receive messages.')).send()
                 else:
                     msg.reply(_('You will not receive messages until %s.') % misc.lctime(to_time)).send()
-                xmpp.send_presence(pto=from_jid, pshow='dnd', pstatus=config.group_topic)
+                xmpp.send_presence(pto=from_jid, pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
             else:
                 msg.reply(_('You are currently receiving messages.')).send()
             return
@@ -436,20 +436,20 @@ def trigger(xmpp, msg):
                             del misc.data['quiet'][to_jid]
                             try:
                                 if to_jid not in data['stop'] and to_jid not in data['quiet']:
-                                    xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                                    xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
                             except:
                                 pass
                     if orig_time==to_time:
                         continue
                     if to_time==None:
                         xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
-                        xmpp.send_presence(pto=to_jid, pshow='dnd', pstatus=config.group_topic)
+                        xmpp.send_presence(pto=to_jid, pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
                     elif to_time=='off':
                         xmpp.send_message(mto=to_jid, mbody=_('You have been stopped quieting by %s.') % misc.getnick(xmpp, from_jid), mtype='chat')
-                        xmpp.send_presence(pto=to_jid, pshow='', pstatus=config.group_topic)
+                        xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
                     else:
                         xmpp.send_message(mto=to_jid, mbody=_('You have been quieted by %s until %s.') % (misc.getnick(xmpp, from_jid), misc.lctime(to_time)), mtype='chat')
-                        xmpp.send_presence(pto=to_jid, pshow='dnd', pstatus=config.group_topic)
+                        xmpp.send_presence(pto=to_jid, pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
                     to_nick = misc.getnick(xmpp, to_jid)
                     if to_time==None:
                         xmpp.send_except(to_jid, _('%s has been quieted by %s.') % (to_nick, misc.getnick(xmpp, from_jid)))
