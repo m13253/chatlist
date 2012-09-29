@@ -110,14 +110,19 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 else:
                     msg.reply(_('You have not joined this group.')).send()
                 return
-            if len(body)>1 and body[0] in config.command_prefix:
+            if len(body)>1 and body[0] in config.command_prefix and len(body.split(None, 1)[0])>1 and not (body[0]=='-' and body[1:].isdigit()):
                 command.trigger(self, msg)
             else:
+                presence_needs_update=False
                 if from_jid in misc.data['stop']:
                     del misc.data['stop'][from_jid]
+                    misc.save_data()
+                    presence_needs_update=True
                 if not misc.check_time(self, misc.data['quiet'], from_jid):
                     msg.reply(_('You have been quieted.')).send()
                     return
+                if presence_needs_update:
+                    self.send_presence(pto=from_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
                 for msg_filter in msgfilters.msg_filters:
                     if not msg_filter(self, msg):
                         return
