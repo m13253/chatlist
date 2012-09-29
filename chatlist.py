@@ -66,7 +66,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         jid=sleekxmpp.JID(presence['from']).bare
         sys.stderr.write('I subcribed %s.\n' % presence['from'])
         while True:
-            to_nick=int(random.random()*100000)
+            to_nick=int(random.random()*90000+10000)
             if not misc.getnick(self, to_nick):
                 break
             to_nick+=1
