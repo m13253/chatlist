@@ -60,7 +60,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 
     def subscribe(self, presence):
         sys.stderr.write('%s subscribed me.\n' % presence['from'])
-        self.send_presence(pto=jid, pshow='away', pnick=config.group_nick, pstatus=_('Not accepted subscription yet'))
+        self.send_presence(pto=sleekxmpp.JID(presence['from']).bare, pshow='away', pnick=config.group_nick, pstatus=_('Not accepted subscription yet'))
 
     def subscribed(self, presence):
         jid=sleekxmpp.JID(presence['from']).bare
