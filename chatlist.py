@@ -55,6 +55,9 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 self.send_presence(pto=presence['from'], pshow='', pnick=config.group_nick, pstatus=config.group_topic)
             else:
                 self.send_presence(pto=presence['from'], pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
+            client_resource=sleekxmpp.JID(presence['from']).resource
+            if client_resource.startswith('Talk.v') and client_resource[6:9]>'104':
+                    self.send_message(mto=presence['from'], mbody=_('Warning: You are probably using GTalk v%s version, which sends your data unsecurely. Please consider downgrading it to GTalk v104 or try third-party clients such as Pidgin.') % client_resource[6:9], mtype='chat')
         except:
             pass
 

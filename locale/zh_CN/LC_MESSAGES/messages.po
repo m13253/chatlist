@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-15 22:16+0800\n"
+"POT-Creation-Date: 2012-10-20 21:33+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,40 +17,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: chatlist.py:64
+#: chatlist.py:60
+#, python-format
+msgid ""
+"Warning: You are probably using GTalk v%s version, which sends your data "
+"unsecurely. Please consider downgrading it to GTalk v104 or try third-party "
+"clients such as Pidgin."
+msgstr ""
+"警告：您似乎正在使用不安全的 GTalk v%s 中国特别版。它用不安全的方式传输数据，"
+"在某些局域网或公司网络环境中可能导致被防火墙强行阻断连接。请考虑降级到 GTalk "
+"v104 英文版本或者尝试类似 Pidgin 的第三方客户端。"
+
+#: chatlist.py:66
 msgid "Not accepted subscription yet"
 msgstr "尚未接受好友请求"
 
-#: chatlist.py:78
+#: chatlist.py:80
 #, python-format
 msgid ""
 "You have been given a random nickname %s, please use /-nick to change your "
 "nickname."
 msgstr "您已被给予随机昵称 %s，请使用 /-nick 来更改昵称。"
 
-#: chatlist.py:79
+#: chatlist.py:81
 msgid "For more help, type /-help"
 msgstr "键入 /-help 以寻求更多帮助。"
 
-#: chatlist.py:80
+#: chatlist.py:82
 #, python-format
 msgid "%s has joined this group."
 msgstr "%s 已加入本群。"
 
-#: chatlist.py:95 command.py:218
+#: chatlist.py:97 command.py:218
 #, python-format
 msgid "%s has quited this group."
 msgstr "%s 已退出本群。"
 
-#: chatlist.py:110
+#: chatlist.py:112
 msgid "You have not accept the buddy request."
 msgstr "您还没有接受好友请求。"
 
-#: chatlist.py:112
+#: chatlist.py:114
 msgid "You have not joined this group."
 msgstr "您还没有加入本群。"
 
-#: chatlist.py:120 command.py:86 command.py:97
+#: chatlist.py:125 command.py:86 command.py:97
 msgid "You have been quieted."
 msgstr "您已被禁言。"
 
