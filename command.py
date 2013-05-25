@@ -140,14 +140,18 @@ def trigger(xmpp, msg):
 
         if cmd[0]=='msg':
             if len(cmd)>2:
-                to_jid=misc.getjid(xmpp, cmd[1])
-                if to_jid:
-                    if to_jid not in misc.data['block'] or from_jid not in misc.data['block'][to_jid]:
+                isAdmin = from_jid in config.admins
+                success=0
+                for to_jid in misc.find_users(xmpp, cmd[1], isAdmin):
+                    success=1
+                    if isAdmin or to_jid not in misc.data['block'] or from_jid not in misc.data['block'][to_jid]:
                         xmpp.send_message(mto=to_jid, mbody='%s (%s): %s' % (misc.getnick(xmpp, from_jid), _('DM'), msg['body'].split(None, 2)[2]), mtype='chat')
-                        msg.reply(_('Your message has been sent.')).send()
+                        success=2
                     else:
-                        msg.reply(_('Error: The receiver has blocked your messages.')).send()
-                else:
+                        xmpp.send_message(mto=from_jid, mbody=_('Error: %s has blocked your messages.') % misc.getnick(xmpp, to_jid), mtype='chat')
+                if success==2:
+                    msg.reply(_('Your message has been sent.')).send()
+                elif success==0:
                     msg.reply(_('Error: User %s is not a member of this group.') % (cmd[1])).send()
             else:
                 msg.reply(misc.replace_prefix(_('Error: /-msg takes exactly two arguments.'), prefix)).send()
