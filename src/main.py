@@ -12,18 +12,19 @@ import config
 import dbman
 import misc
 import termcon
-import util
+import utils
 
 gettext.install('messages', 'locale')
 
 
-@util.prerr
+@utils.prerr
 def start_xmpp():
     try:
         xmpp=XMPPBot(config.JID, config.password)
         xmpp.register_plugin('xep_0030') # Service Discovery
         xmpp.register_plugin('xep_0004') # Data Forms
         xmpp.register_plugin('xep_0060') # PubSub
+        xmpp.register_plugin('xep_0071') # XHTML-IM
         xmpp.register_plugin('xep_0199') # XMPP Ping
         if xmpp.connect(config.server):
             xmpp.process(block=True)
@@ -43,12 +44,14 @@ if __name__=='__main__':
     misc.quiting = False
     termcon.console.start()
     dbman.db.connect()
+    dbman.db.create()
     dbman.db.update_root()
     try:
         startxmpp()
         raise SystemExit
     except (SystemExit, KeyboardInterrupt):
         termcon.writeln('Quiting...')
+        self.quiting = True
         time.sleep(3)
         xmpp.disconnect(wait=True)
         sys.stderr.write('\n')

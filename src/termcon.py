@@ -8,6 +8,7 @@ import time
 import traceback
 
 import config
+import misc
 
 gettext.install('messages', 'locale')
 
@@ -33,6 +34,8 @@ class ConsoleThread(threading.Thread):
                         sys.stderr.write('\n')
                     else:
                         self.stop()
+                if misc.quiting:
+                    self.quiting = misc.quiting
 
     def writeln(self, s):
         if self.stdout_is_tty and not self.quiting:

@@ -15,8 +15,8 @@ class DBMan:
 
     def connect(self, filename=config.datafile):
         self.db = sqlite3.Connection(filename)
-        self.execute = sqlite3.execute
-        self.commit = sqlite3.commit
+        self.execute = self.db.execute
+        self.commit = self.db.commit
 
     def create(self):
         self.db.execute('''
