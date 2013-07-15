@@ -6,7 +6,6 @@ import locale
 import config
 
 gettext.install('messages', 'locale')
-locale.setlocale(locale.LC_TIME, '')
 
 restarting = False
 quiting = False

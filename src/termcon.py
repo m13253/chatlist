@@ -5,12 +5,11 @@ import locale
 import sys
 import threading
 import time
+import traceback
 
 import config
 
-
 gettext.install('messages', 'locale')
-locale.setlocale(locale.LC_TIME, '')
 
 
 class ConsoleThread(threading.Thread):
@@ -44,6 +43,13 @@ class ConsoleThread(threading.Thread):
         if self.stdout_is_tty and not self.quiting:
             sys.stderr.write('> ')
 
+    def printerr(self):
+        try:
+            e = sys.exc_info()
+            self.writeln(''.join(traceback.format_exception(e[0], e[1], e[2])))
+        except Exception:
+            pass
+
     def stop(self):
         sys.stderr.write('\r \r\n')
         self.quiting = True
@@ -51,6 +57,8 @@ class ConsoleThread(threading.Thread):
     def __del__(self):
         self.quiting = True
 
-console_thread = ConsoleThread()
+
+console = ConsoleThread()
+writeln = console.writeln
 
 # vim: et ft=python sts=4 sw=4 ts=4
