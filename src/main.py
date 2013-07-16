@@ -13,6 +13,7 @@ import dbman
 import misc
 import termcon
 import utils
+import xmppmain
 
 gettext.install('messages', 'locale')
 
@@ -20,7 +21,7 @@ gettext.install('messages', 'locale')
 @utils.prerr
 def start_xmpp():
     try:
-        xmpp=XMPPBot(config.JID, config.password)
+        xmpp=xmppmain.XMPPBot(config.JID, config.password)
         xmpp.register_plugin('xep_0030') # Service Discovery
         xmpp.register_plugin('xep_0004') # Data Forms
         xmpp.register_plugin('xep_0060') # PubSub
