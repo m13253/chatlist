@@ -18,43 +18,24 @@ import xmppmain
 gettext.install('messages', 'locale')
 
 
-@utils.prerr
-def start_xmpp():
-    try:
-        xmpp=xmppmain.XMPPBot(config.JID, config.password)
-        xmpp.register_plugin('xep_0030') # Service Discovery
-        xmpp.register_plugin('xep_0004') # Data Forms
-        xmpp.register_plugin('xep_0060') # PubSub
-        xmpp.register_plugin('xep_0071') # XHTML-IM
-        xmpp.register_plugin('xep_0199') # XMPP Ping
-        if xmpp.connect(config.server):
-            xmpp.process(block=True)
-        else:
-            misc.restarting = True
-            try:
-                raise ConnectionError
-            except NameError:
-                raise OSError('Connection Error')
-    except Exception:
-        misc.restarting = True
-        raise
-
-
-if __name__=='__main__':
+if __name__ == '__main__':
     misc.restarting = False
     misc.quiting = False
-    termcon.console.start()
+    termcon.start()
     dbman.db.connect()
     dbman.db.create()
     dbman.db.update_root()
     try:
-        startxmpp()
+        xmppmain.start()
         raise SystemExit
     except (SystemExit, KeyboardInterrupt):
         termcon.writeln('Quiting...')
-        self.quiting = True
+        misc.quiting = True
         time.sleep(3)
-        xmpp.disconnect(wait=True)
+        try:
+            xmppmain.xmpp.disconnect(wait=True)
+        except Exception:
+            pass
         sys.stderr.write('\n')
         if misc.restarting:
             time.sleep(10)

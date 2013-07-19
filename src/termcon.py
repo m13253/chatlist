@@ -8,7 +8,9 @@ import time
 import traceback
 
 import config
+import utils
 import misc
+import xmppmain
 
 gettext.install('messages', 'locale')
 
@@ -16,18 +18,19 @@ gettext.install('messages', 'locale')
 class ConsoleThread(threading.Thread):
     def __init__(self):
         super().__init__()
-        self.stdout_is_tty = sys.stdout.isatty()
+        self.daemon = True
         self.quiting = False
+        self.stdout_is_tty = sys.stdout.isatty()
 
     def run(self):
         if self.stdout_is_tty:
             success = False
+            sys.stderr.write('> ')
             while not self.quiting:
-                sys.stderr.write('> ')
                 try:
                     cmd = input()
                     success = True
-                    print(cmd)
+                    self.cmdprocess(cmd)
                 except EOFError:
                     if success:
                         success = False
@@ -37,7 +40,7 @@ class ConsoleThread(threading.Thread):
                 if misc.quiting:
                     self.quiting = misc.quiting
 
-    def writeln(self, s):
+    def writeln(self, s=''):
         if self.stdout_is_tty and not self.quiting:
             sys.stderr.write('\r \r')
         for line in str(s).splitlines(True):
@@ -53,6 +56,10 @@ class ConsoleThread(threading.Thread):
         except Exception:
             pass
 
+    @utils.prerr
+    def cmdprocess(self, cmd):
+        writeln(eval(cmd))
+
     def stop(self):
         sys.stderr.write('\r \r\n')
         self.quiting = True
@@ -62,6 +69,10 @@ class ConsoleThread(threading.Thread):
 
 
 console = ConsoleThread()
+start = console.start
 writeln = console.writeln
+printerr = console.printerr
+stop = console.stop
+
 
 # vim: et ft=python sts=4 sw=4 ts=4

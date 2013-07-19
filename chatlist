@@ -1,5 +1,6 @@
 #!/bin/sh
 
-cd src/.. || exit 2
+cd src 2>/dev/null
+cd ..
 exec python3 src/main.py "$@" ||
 exec python src/main.py "$@"

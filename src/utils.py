@@ -15,7 +15,7 @@ locale.setlocale(locale.LC_TIME, '')
 lctime = lambda t: time.strftime('%c %Z', time.localtime(t))
 
 
-def noerr(func): # decorator
+def noerr(func):  # decorator
     def resfunc(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -24,7 +24,7 @@ def noerr(func): # decorator
     return resfunc
 
 
-def prerr(func): # decorator
+def prerr(func):  # decorator
     def resfunc(*args, **kwargs):
         try:
             return func(*args, **kwargs)
