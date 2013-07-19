@@ -49,6 +49,7 @@ class ConsoleThread(threading.Thread):
         if self.stdout_is_tty and not self.quiting:
             sys.stderr.write('> ')
 
+    # Not planning to use logging module since it messes up whith '> ' prmopts.
     def printerr(self):
         try:
             e = sys.exc_info()
