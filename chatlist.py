@@ -40,11 +40,10 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     sys.stderr.write('\n')
                 elif self.client_roster[i]['subscription']=='to':
                     try:
-                        misc.del_roster_item(i)
-                        misc.client_roster.remove(i)
+                        self.del_roster_item(i)
                         if i in misc.data['stop']:
                             del misc.data['stop'][i]
-                    except:
+                    except Exception:
                         pass
         sys.stderr.write(']\n')
 
@@ -58,7 +57,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             client_resource=sleekxmpp.JID(presence['from']).resource
             if client_resource.startswith('Talk.v') and client_resource[6:9]>'104':
                     self.send_message(mto=presence['from'], mbody=_('Warning: You are probably using GTalk v%s version, which sends your data unsecurely. Please consider downgrading it to GTalk v104 or try third-party clients such as Pidgin.') % client_resource[6:9], mtype='chat')
-        except:
+        except Exception:
             pass
 
     def subscribe(self, presence):
@@ -90,8 +89,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         from_nick=misc.getnick(self, from_jid)
         try:
             self.del_roster_item(from_jid)
-            self.client_roster.remove(from_jid)
-        except:
+        except Exception:
             pass
         sys.stderr.write('%s unsubscribed me.\n' % presence['from'])
         self.send_except(from_jid, _('%s has quited this group.') % from_nick)
@@ -155,7 +153,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 if misc.check_time(self, misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
                     try:
                         self.send_message(mto=i, mbody=body, mtype='chat')
-                    except:
+                    except Exception:
                         pass
 
 if __name__=='__main__':
@@ -205,7 +203,7 @@ if __name__=='__main__':
             sys.stderr.write('Restarting.\n')
             try:
                 os.execlp('python3', 'python3', __file__)
-            except:
+            except Exception:
                 os.execlp('python', 'python', __file__)
         raise SystemExit
 
