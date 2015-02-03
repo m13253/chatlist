@@ -216,8 +216,7 @@ def trigger(xmpp, msg):
             misc.del_nicktable(xmpp, from_jid)
             try:
                 xmpp.del_roster_item(from_jid)
-                xmpp.client_roster.remove(from_jid)
-            except:
+            except Exception:
                 pass
             xmpp.send_except(from_jid, _('%s has quited this group.') % to_nick)
             return
@@ -300,7 +299,7 @@ def trigger(xmpp, msg):
                             try:
                                 if to_jid not in data['stop'] and to_jid not in data['quiet']:
                                     xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
-                            except:
+                            except Exception:
                                 pass
                     else:
                         to_time=misc.TimeUnit(to_time)
@@ -312,7 +311,7 @@ def trigger(xmpp, msg):
                             try:
                                 if to_jid not in data['stop'] and to_jid not in data['quiet']:
                                     xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
-                            except:
+                            except Exception:
                                 pass
                         misc.save_data()
                 except ValueError:
@@ -386,8 +385,7 @@ def trigger(xmpp, msg):
                     misc.del_nicktable(xmpp, to_jid)
                     try:
                         xmpp.del_roster_item(to_jid)
-                        xmpp.client_roster.remove(to_jid)
-                    except:
+                    except Exception:
                         pass
                     if reason:
                         xmpp.send_except(to_jid, _('%s has been kicked by %s. (%s)') % (to_nick, misc.getnick(xmpp, from_jid), reason))
@@ -441,7 +439,7 @@ def trigger(xmpp, msg):
                             try:
                                 if to_jid not in data['stop'] and to_jid not in data['quiet']:
                                     xmpp.send_presence(pto=to_jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
-                            except:
+                            except Exception:
                                 pass
                     if orig_time==to_time:
                         continue
@@ -671,7 +669,7 @@ def trigger(xmpp, msg):
     except Exception as e:
         try:
             msg.reply(_('An error occured: %s: %s') % (e.__class__.__name__, e)).send()
-        except:
+        except Exception:
             pass
 
 help_msg = {
