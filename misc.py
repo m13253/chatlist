@@ -65,7 +65,7 @@ def getjid(xmpp, nick_or_jid):
 
 def isnickvalid(nick):
     nick=str(nick)
-    return bool(nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('?' not in nick) and ('*' not in nick) and (nick.lower()!='root') and (nick.lower()!='admin') and (nick.lower()!='administrator'))
+    return bool(nick and (nick[0] not in config.command_prefix) and (nick[0]!='-') and ('@' not in nick) and ('?' not in nick) and ('*' not in nick) and (nick.lower()!='root') and (nick.lower()!='admin') and (nick.lower()!='administrator') and (nick!='新昵称'))
 
 def isjidvalid(jid):
     jid=str(jid)

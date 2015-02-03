@@ -10,7 +10,7 @@ import misc
 gettext.install('messages', 'locale')
 
 re_autoreply = re.compile('[aA]uto ?[rR]eply[:：\\]]|自动回复[:：\\]]|我(现在)?有事情?不在|IM\\+|music\ messaging\ session|音乐信使会话|再和[您你]联系|<ding>')
-re_ayt = re.compile('.{,5}([aA]ny ?(body|one) there|这?群?里?[边面]?有人在?[吗么马]).{,5}$')
+re_ayt = re.compile('.{,5}([aA]ny ?(body|one) there|这?群?里?[边面]?有人在?[吗么马嗎]).{,5}$')
 
 def filter_autoreply(xmpp, msg):
     if(msg['from'].bare=='orzbot@erhandsome.org'):
