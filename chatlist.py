@@ -6,6 +6,7 @@ import random
 import sleekxmpp
 import sys
 import time
+import logging
 
 import command
 import config
@@ -157,6 +158,9 @@ if __name__=='__main__':
     misc.restarting=False
     misc.quiting=False
     misc.load_data()
+
+    logging.basicConfig(level=config.loglevel)
+
     for i in ('stop', 'quiet', 'block'):
         if i not in misc.data:
             misc.data[i]={}
