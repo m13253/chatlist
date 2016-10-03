@@ -135,7 +135,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         except SystemExit:
             raise
         except Exception as e:
-            sys.stderr.write('Exception: %s: %s\n' % (type(e).__name__, e))
+            logging.warning('Exception: %s: %s\n' % (type(e).__name__, e))
 
     def dispatch_message(self, from_jid, body):
         self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
@@ -186,11 +186,11 @@ if __name__=='__main__':
             if xmpp.connect(config.server):
                 xmpp.process(block=True)
             else:
-                sys.stderr.write('Connection error.')
+                logging.warning('Connection error.')
                 time.sleep(10)
                 misc.restarting=True
         except Exception as e:
-            sys.stderr.write('Exception: %s: %s\n' % (type(e).__name__, e))
+            logging.warning('Exception: %s: %s\n' % (type(e).__name__, e))
             time.sleep(10)
             misc.restarting=True
         raise SystemExit
