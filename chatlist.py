@@ -103,6 +103,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 return
             from_jid=msg['from'].bare
             body=msg['body']
+            body=body.rstrip()
             if not body:
                 return
             sys.stderr.write('%s:\t%s\n' % (from_jid, body))
@@ -138,7 +139,10 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             logging.warning('Exception: %s: %s\n' % (type(e).__name__, e))
 
     def dispatch_message(self, from_jid, body):
-        self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
+        if from_jid in config.omit_nickname_prefix:
+            self.send_except(from_jid, body)
+        else:
+            self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
 
     def send_except(self, except_jid, body):
         nowtime=time.time()
