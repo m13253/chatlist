@@ -103,6 +103,7 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 return
             from_jid=msg['from'].bare
             body=msg['body']
+            body=body.rstrip()
             if not body:
                 return
             sys.stderr.write('%s:\t%s\n' % (from_jid, body))
