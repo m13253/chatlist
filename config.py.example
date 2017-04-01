@@ -19,6 +19,10 @@ welcome_message = 'Welcome to join this group!'
 group_nick = 'Test group'
 group_topic = 'Test group powered by chatlist'
 
+# do not include nicknames in messages from these JIDs
+# useful for bots and other automated global messages
+omit_nickname_prefix = ["ircbot@example.com"]
+
 # chat message logs
 logsize = 500 # Messages are temporarily stored in log so that you can use -old
 cmdlogsize = 500 # Commands are temporarily stored here.
