@@ -29,6 +29,12 @@ def filter_ayt(xmpp, msg):
         msg.reply(misc.replace_prefix(_('Please type /-ls to list online users, or type /-help for further help.'), config.command_prefix[0])).send()
     return True
 
-msg_filters=[filter_autoreply, filter_pastebin, filter_ayt]
+def filter_otr(xmpp, msg):
+    if msg['body'].startswith('?OTRv'):
+        msg.reply(_('Currently OTR is not supported. You should disable OTR for this buddy.')).send()
+        return False
+    return True
+
+msg_filters=[filter_autoreply, filter_pastebin, filter_ayt, filter_otr]
 
 # vim: et ft=python sts=4 sw=4 ts=4
