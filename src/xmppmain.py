@@ -14,6 +14,7 @@ gettext.install('messages', 'locale')
 
 
 class XMPPBot(sleekxmpp.ClientXMPP):
+
     def __init_(self, jid, password):
         super().__init__(jid, password)
         self.add_event_handler('session_start', self.sessionstart)

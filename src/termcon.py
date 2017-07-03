@@ -16,6 +16,7 @@ gettext.install('messages', 'locale')
 
 
 class ConsoleThread(threading.Thread):
+
     def __init__(self):
         super().__init__()
         self.daemon = True

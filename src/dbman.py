@@ -10,6 +10,7 @@ gettext.install('messages', 'locale')
 
 
 class DBMan:
+
     def __init__(self):
         self.db = None
 
@@ -52,7 +53,7 @@ class DBMan:
     def update_root(self):
         self.db.execute("UPDATE users SET isroot=0 WHERE jid<>'';")
         if len(config.root):
-            self.db.execute('UPDATE users SET isroot=1 WHERE jid IN (%s)' % ', '.join(("'"+str(i).replace("'", "''")+"'" for i in config.root)))
+            self.db.execute('UPDATE users SET isroot=1 WHERE jid IN (%s)' % ', '.join(("'" + str(i).replace("'", "''") + "'" for i in config.root)))
         self.db.commit()
 
     def update_roster(self, users):
@@ -94,12 +95,12 @@ class DBMan:
         if logsize:
             curlogsize = cursor.execute('SELECT COUNT(time) FROM logs WHERE iscmd=0;').fetchone[0]
             if curlogsize > logsize:
-                cursor.execute('DELETE FROM logs WHERE time IN (SELECT time FROM logs WHERE iscmd=0 ORDER BY time DESC LIMIT ?) AND iscmd=0;', (curlogsize-logsize,))
+                cursor.execute('DELETE FROM logs WHERE time IN (SELECT time FROM logs WHERE iscmd=0 ORDER BY time DESC LIMIT ?) AND iscmd=0;', (curlogsize - logsize,))
                 success = True
         if cmdlogsize:
             curcmdlogsize = cursor.execute('SELECT COUNT(time) FROM logs WHERE iscmd<>0;').fetchone[0]
             if curlogsize > cmdlogsize:
-                cursor.execute('DELETE FROM logs WHERE time IN (SELECT time FROM logs WHERE iscmd<>0 ORDER BY time DESC LIMIT ?) AND iscmd<>0;', (curlogsize-cmdlogsize,))
+                cursor.execute('DELETE FROM logs WHERE time IN (SELECT time FROM logs WHERE iscmd<>0 ORDER BY time DESC LIMIT ?) AND iscmd<>0;', (curlogsize - cmdlogsize,))
                 success = True
         if success:
             cursor.execute('VACUUM')

@@ -45,7 +45,7 @@ def isnickvalid(nick):
 
 def isjidvalid(jid):
     jid = str(jid)
-    return bool(jid and 0 < jid.find('@') < len(jid)-1)
+    return bool(jid and 0 < jid.find('@') < len(jid) - 1)
 
 
 def replace_prefix(s, prefix):
@@ -76,14 +76,14 @@ def replace_glob_to_regex(glob):
             res += '.'
         else:
             res += re.escape(i)
-    return '^'+res+'$'
+    return '^' + res + '$'
 
 
 def replace_globs_to_regex(glob):
     if isinstance(glob, str):
         return replace_glob_to_regex(glob)
     if len(glob) > 0:
-        return '^('+'|'.join([replace_glob_to_regex(i)[1:-1] for i in glob])+')$'
+        return '^(' + '|'.join([replace_glob_to_regex(i)[1:-1] for i in glob]) + ')$'
     else:
         return '^.*'
 
@@ -117,6 +117,7 @@ time_unit_chars = 'cyMdhms'
 
 
 class TimeUnit(float):
+
     def __new__(cls, s):
         s = str(s)
         if not s:
@@ -135,7 +136,7 @@ class TimeUnit(float):
             if i.isdigit() or i == '.':
                 cur += i
             elif i in time_unit:
-                res += float(cur)*time_unit[i]
+                res += float(cur) * time_unit[i]
                 cur = ''
             elif not i.isspace():
                 raise ValueError('invalid liternal for %s(): %s' % (cls, repr(s)))
@@ -160,15 +161,15 @@ class TimeUnit(float):
                 times, value = divmod(value, time_unit[i])
                 times = int(times)
                 if times > 0:
-                    res += str(times)+i
+                    res += str(times) + i
         i = time_unit_chars[-1]
-        if value+value >= time_unit[i]:
+        if value + value >= time_unit[i]:
             times, value = divmod(value, time_unit[i])
             times = int(times)
-            if value+value >= time_unit[i]:
+            if value + value >= time_unit[i]:
                 times += 1
             if times > 0:
-                res += str(times)+i
+                res += str(times) + i
         if not res or res == '-':
             res = '0'
         return res
@@ -203,7 +204,7 @@ def compare_status(a, b):
         vb = 0
     else:
         vb = 6
-    return va-vb
+    return va - vb
 
 
 def get_status_name(s):
