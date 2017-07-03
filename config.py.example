@@ -3,11 +3,11 @@
 JID = 'group@example.com/bot'
 password = '********'
 server = ('example.com', 5222)
-root = ['you@example.com'] # the biggest, the most dangerous privilege
+root = ['you@example.com']  # the biggest, the most dangerous privilege
 admins = ['you@example.com', 'another@example.com']
-datafile = 'data/data.db' # will be automatically created
+datafile = 'data/data.db'  # will be automatically created
 
-command_prefix = '-/)' # A message starting with one of these characters will trigger a specific command
+command_prefix = '-/)'  # A message starting with one of these characters will trigger a specific command
 
 # '/-' will be replaced by command_prefix[0], for '/', type '//'
 welcome_message = 'Welcome to join this group!'
@@ -15,8 +15,8 @@ welcome_message = 'Welcome to join this group!'
 group_nick = 'Test group'
 group_topic = 'Test group powered by chatlist'
 
-logsize = 500 # Messages are temporarily stored in log so that you can use -old
-cmdlogsize = 500 # Commands are temporarily stored here.
-store_log = True # Logs stored in data file can be restored after restarting.
+logsize = 500  # Messages are temporarily stored in log so that you can use -old
+cmdlogsize = 500  # Commands are temporarily stored here.
+store_log = True  # Logs stored in data file can be restored after restarting.
 
 # vim: et ft=python sts=4 sw=4 ts=4
