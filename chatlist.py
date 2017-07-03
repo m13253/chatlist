@@ -15,7 +15,9 @@ import msgfilters
 
 gettext.install('messages', 'locale')
 
+
 class XMPPBot(sleekxmpp.ClientXMPP):
+
     def __init__(self, jid, password):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
         self.add_event_handler('session_start', self.start)
@@ -33,13 +35,13 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         sys.stderr.write('roster = [\n')
         for i in self.client_roster:
             if self.client_roster[i]['to']:
-                if self.client_roster[i]['subscription']=='both':
+                if self.client_roster[i]['subscription'] == 'both':
                     sys.stderr.write('\t%s' % i)
                     misc.add_nicktable(self, i)
                     if not (misc.check_time(self, misc.data['stop'], i) or misc.check_time(self, misc.data['quiet'], i)):
                         self.send_presence(pto=i, pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
                     sys.stderr.write('\n')
-                elif self.client_roster[i]['subscription']=='to':
+                elif self.client_roster[i]['subscription'] == 'to':
                     try:
                         self.del_roster_item(i)
                         if i in misc.data['stop']:
@@ -50,14 +52,14 @@ class XMPPBot(sleekxmpp.ClientXMPP):
 
     def gotonline(self, presence):
         try:
-            from_jid=sleekxmpp.JID(presence['from']).bare
+            from_jid = sleekxmpp.JID(presence['from']).bare
             if misc.check_time(self, misc.data['stop'], from_jid) and misc.check_time(self, misc.data['quiet'], from_jid):
                 self.send_presence(pto=presence['from'], pshow='', pnick=config.group_nick, pstatus=config.group_topic)
             else:
                 self.send_presence(pto=presence['from'], pshow='dnd', pnick=config.group_nick, pstatus=config.group_topic)
-            client_resource=sleekxmpp.JID(presence['from']).resource
-            if client_resource.startswith('Talk.v') and client_resource[6:9]>'104':
-                    self.send_message(mto=presence['from'], mbody=_('Warning: You are probably using GTalk v%s version, which sends your data unsecurely. Please consider downgrading it to GTalk v104 or try third-party clients such as Pidgin.') % client_resource[6:9], mtype='chat')
+            client_resource = sleekxmpp.JID(presence['from']).resource
+            if client_resource.startswith('Talk.v') and client_resource[6:9] > '104':
+                self.send_message(mto=presence['from'], mbody=_('Warning: You are probably using GTalk v%s version, which sends your data unsecurely. Please consider downgrading it to GTalk v104 or try third-party clients such as Pidgin.') % client_resource[6:9], mtype='chat')
         except Exception:
             pass
 
@@ -66,14 +68,14 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.send_presence(pto=sleekxmpp.JID(presence['from']).bare, pshow='away', pnick=config.group_nick, pstatus=_('Not accepted subscription yet'))
 
     def subscribed(self, presence):
-        jid=sleekxmpp.JID(presence['from']).bare
+        jid = sleekxmpp.JID(presence['from']).bare
         sys.stderr.write('I subcribed %s.\n' % presence['from'])
         while True:
-            to_nick=int(random.random()*90000+10000)
+            to_nick = int(random.random() * 90000 + 10000)
             if not misc.getnick(self, to_nick):
                 break
-            to_nick+=1
-        to_nick='Guest'+str(to_nick)
+            to_nick += 1
+        to_nick = 'Guest' + str(to_nick)
         self.update_roster(jid, name=to_nick)
         misc.add_nicktable(self, jid)
         self.send_message(mto=presence['from'], mbody=misc.replace_prefix(config.welcome_message, config.command_prefix[0]), mtype='chat')
@@ -83,11 +85,11 @@ class XMPPBot(sleekxmpp.ClientXMPP):
         self.send_presence(pto=jid, pshow='', pnick=config.group_nick, pstatus=config.group_topic)
 
     def unsubscribe(self, presence):
-        from_jid=sleekxmpp.JID(presence['from']).bare
+        from_jid = sleekxmpp.JID(presence['from']).bare
         if from_jid in misc.data['stop'][from_jid]:
             del misc.data['stop'][from_jid]
             misc.save_data()
-        from_nick=misc.getnick(self, from_jid)
+        from_nick = misc.getnick(self, from_jid)
         try:
             self.del_roster_item(from_jid)
         except Exception:
@@ -101,26 +103,26 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 return
             if msg['type'] not in ('chat', 'normal'):
                 return
-            from_jid=msg['from'].bare
-            body=msg['body']
-            body=body.rstrip()
+            from_jid = msg['from'].bare
+            body = msg['body']
+            body = body.rstrip()
             if not body:
                 return
             sys.stderr.write('%s:\t%s\n' % (from_jid, body))
-            if from_jid not in self.client_roster or self.client_roster[from_jid]['subscription']!='both':
-                if self.client_roster[from_jid]['subscription']=='from':
+            if from_jid not in self.client_roster or self.client_roster[from_jid]['subscription'] != 'both':
+                if self.client_roster[from_jid]['subscription'] == 'from':
                     msg.reply(_('You have not accept the buddy request.')).send()
                 else:
                     msg.reply(_('You have not joined this group.')).send()
                 return
-            if len(body)>1 and body[0] in config.command_prefix and len(body.split(None, 1)[0])>1 and not (body[0]=='-' and body[1:].isdigit()):
+            if len(body) > 1 and body[0] in config.command_prefix and len(body.split(None, 1)[0]) > 1 and not (body[0] == '-' and body[1:].isdigit()):
                 command.trigger(self, msg)
             else:
-                presence_needs_update=False
+                presence_needs_update = False
                 if from_jid in misc.data['stop']:
                     del misc.data['stop'][from_jid]
                     misc.save_data()
-                    presence_needs_update=True
+                    presence_needs_update = True
                 if not misc.check_time(self, misc.data['quiet'], from_jid):
                     msg.reply(_('You have been quieted.')).send()
                     return
@@ -145,12 +147,12 @@ class XMPPBot(sleekxmpp.ClientXMPP):
             self.send_except(from_jid, '%s: %s' % (misc.getnick(self, from_jid), body))
 
     def send_except(self, except_jid, body):
-        nowtime=time.time()
+        nowtime = time.time()
         misc.msg_log.append((nowtime, body))
-        if len(misc.msg_log)>config.logsize:
-            misc.msg_log[len(misc.msg_log)-config.logsize:]=[]
+        if len(misc.msg_log) > config.logsize:
+            misc.msg_log[len(misc.msg_log) - config.logsize:] = []
         for i in self.client_roster:
-            if i!=except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription']=='both' and self.client_roster[i].resources:
+            if i != except_jid and self.client_roster[i]['to'] and self.client_roster[i]['subscription'] == 'both' and self.client_roster[i].resources:
                 misc.check_time(self, misc.data['quiet'], i)
                 if misc.check_time(self, misc.data['stop'], i) and (i not in misc.data['block'] or except_jid not in misc.data['block'][i]):
                     try:
@@ -158,45 +160,45 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                     except Exception:
                         pass
 
-if __name__=='__main__':
-    misc.restarting=False
-    misc.quiting=False
+if __name__ == '__main__':
+    misc.restarting = False
+    misc.quiting = False
     misc.load_data()
 
     logging.basicConfig(level=config.loglevel)
 
     for i in ('stop', 'quiet', 'block'):
         if i not in misc.data:
-            misc.data[i]={}
+            misc.data[i] = {}
     if config.store_log:
         if 'msg_log' in misc.data:
-            misc.msg_log=misc.data['msg_log']
+            misc.msg_log = misc.data['msg_log']
         else:
-            misc.data['msg_log']=misc.msg_log
+            misc.data['msg_log'] = misc.msg_log
         if 'cmd_log' in misc.data:
-            misc.cmd_log=misc.data['cmd_log']
+            misc.cmd_log = misc.data['cmd_log']
         else:
-            misc.data['cmd_log']=misc.cmd_log
+            misc.data['cmd_log'] = misc.cmd_log
     for i in config.root:
         if i not in config.admins:
             config.admins.append(i)
     try:
         try:
-            xmpp=XMPPBot(config.JID, config.password)
-            xmpp.register_plugin('xep_0030') # Service Discovery
-            xmpp.register_plugin('xep_0004') # Data Forms
-            xmpp.register_plugin('xep_0060') # PubSub
-            xmpp.register_plugin('xep_0199') # XMPP Ping
+            xmpp = XMPPBot(config.JID, config.password)
+            xmpp.register_plugin('xep_0030')  # Service Discovery
+            xmpp.register_plugin('xep_0004')  # Data Forms
+            xmpp.register_plugin('xep_0060')  # PubSub
+            xmpp.register_plugin('xep_0199')  # XMPP Ping
             if xmpp.connect(config.server):
                 xmpp.process(block=True)
             else:
                 logging.warning('Connection error.')
                 time.sleep(10)
-                misc.restarting=True
+                misc.restarting = True
         except Exception as e:
             logging.warning('Exception: %s: %s\n' % (type(e).__name__, e))
             time.sleep(10)
-            misc.restarting=True
+            misc.restarting = True
         raise SystemExit
     except (SystemExit, KeyboardInterrupt):
         sys.stderr.write('Quiting...')
