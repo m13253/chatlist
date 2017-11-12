@@ -7,6 +7,7 @@ import sleekxmpp
 import sys
 import time
 import logging
+import signal
 
 import command
 import config
@@ -163,6 +164,8 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                         pass
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGTERM, lambda signal, frame: sys.exit())  # handle SIGTERM, graceful exit
+
     misc.restarting = False
     misc.quiting = False
     misc.load_data()
