@@ -103,6 +103,8 @@ class XMPPBot(sleekxmpp.ClientXMPP):
                 return
             if msg['type'] not in ('chat', 'normal'):
                 return
+            if not msg['from'].user:
+                return
             from_jid = msg['from'].bare
             body = msg['body']
             body = body.rstrip()
